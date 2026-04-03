@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedModr | Online Tool for Mediation & Moderation Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --sidebar-bg: #08090f;
+  --sidebar-border: #1a1d2e;
+  --sidebar-hover: #12152a;
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f8;
+  --surface-3: #e4e9f4;
+  --border: #d8deee;
+  --border-med: #b8c4dc;
+  --brand: #3d5af1;
+  --brand-dark: #2a44d6;
+  --brand-light: #6b85f5;
+  --brand-bg: rgba(61,90,241,0.07);
+  --brand-glow: rgba(61,90,241,0.22);
+  --teal: #0891b2;
+  --emerald: #047857;
+  --emerald-bg: rgba(4,120,87,0.08);
+  --emerald-border: rgba(4,120,87,0.28);
+  --amber: #b45309;
+  --amber-bg: rgba(180,83,9,0.08);
+  --amber-border: rgba(180,83,9,0.28);
+  --rose: #be123c;
+  --rose-bg: rgba(190,18,60,0.07);
+  --rose-border: rgba(190,18,60,0.25);
+  --violet: #6d28d9;
+  --text-1: #080d1f;
+  --text-2: #1e2745;
+  --text-3: #4a5470;
+  --text-4: #8090b0;
+  --st-1: #eef2ff;
+  --st-2: #b8c6e8;
+  --st-3: #7888b4;
+  --st-4: #3a4468;
+  --font: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --r-xs:4px;--r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:20px;--r-2xl:28px;
+  --s-sm:0 1px 6px rgba(15,25,70,.07),0 1px 2px rgba(15,25,70,.04);
+  --s-md:0 4px 18px rgba(15,25,70,.10),0 2px 6px rgba(15,25,70,.05);
+  --s-lg:0 12px 36px rgba(15,25,70,.13),0 4px 12px rgba(15,25,70,.06);
+  --s-brand:0 4px 20px rgba(61,90,241,.28),0 1px 4px rgba(61,90,241,.14);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--text-1);min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
+
+/* ── SIDEBAR ── */
+.sidebar{width:268px;min-width:268px;background:var(--sidebar-bg);border-right:1px solid var(--sidebar-border);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:300;transition:transform .28s ease}
+.sidebar-logo{padding:22px 20px 18px;border-bottom:1px solid var(--sidebar-border)}
+.logo-mark{display:flex;align-items:center;gap:13px;cursor:pointer;text-decoration:none}
+.logo-icon{width:44px;height:44px;border-radius:var(--r-md);background:linear-gradient(135deg,#3d5af1,#7c3aed);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 1px rgba(255,255,255,.10),var(--s-brand)}
+.logo-icon i{color:#fff;font-size:1.1rem}
+.logo-text{display:flex;flex-direction:column}
+.logo-name{font-size:1.2rem;font-weight:800;color:#eef2ff;line-height:1.2;letter-spacing:-.02em}
+.logo-sub{font-size:.7rem;color:var(--st-4);text-transform:uppercase;letter-spacing:.14em;font-weight:600;margin-top:2px}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-sec-label{font-size:.67rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--st-4);padding:18px 10px 7px;display:block}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 14px;border-radius:var(--r-md);cursor:pointer;font-size:.9rem;font-weight:600;color:var(--st-2);transition:all .15s;border:1px solid transparent;margin-bottom:3px}
+.nav-item:hover{background:var(--sidebar-hover);color:var(--st-1);border-color:var(--sidebar-border)}
+.nav-item.active{background:var(--brand);color:#fff;border-color:rgba(255,255,255,.12);box-shadow:var(--s-brand)}
+.nav-item i{width:17px;text-align:center;opacity:.8}
+.nav-item.active i{opacity:1}
+.sidebar-footer{padding:16px 18px;border-top:1px solid var(--sidebar-border)}
+.theme-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.theme-label{font-size:.83rem;color:var(--st-3);font-weight:600}
+.theme-btn{display:flex;align-items:center;gap:7px;background:var(--sidebar-hover);border:1px solid var(--sidebar-border);color:var(--st-2);border-radius:var(--r-sm);padding:7px 14px;font-size:.78rem;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .15s}
+.theme-btn:hover{background:#1e2340;color:var(--st-1)}
+.ver-badge{font-size:.7rem;font-family:var(--mono);font-weight:500;color:var(--st-4);text-align:center;background:rgba(255,255,255,.03);border:1px solid var(--sidebar-border);border-radius:var(--r-xs);padding:7px 8px;letter-spacing:.04em}
+
+/* ── MAIN ── */
+.main{margin-left:268px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:62px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 36px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(15,25,70,.06)}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.hamburger{display:none;background:transparent;border:1px solid var(--border);color:var(--text-3);border-radius:var(--r-sm);width:38px;height:38px;align-items:center;justify-content:center;cursor:pointer;font-size:.95rem}
+.breadcrumb{font-size:.9rem;font-weight:600;color:var(--text-3);display:flex;align-items:center;gap:8px}
+.breadcrumb .sep{color:var(--border-med)}
+.breadcrumb .cur{color:var(--text-1);font-weight:800}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-ghost{background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);border-radius:var(--r-sm);padding:9px 18px;font-size:.85rem;font-family:var(--font);font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;text-decoration:none}
+.tb-ghost:hover{background:var(--surface-3);border-color:var(--border-med);color:var(--text-1)}
+.tb-primary{background:var(--brand);color:#fff;border:none;border-radius:var(--r-sm);padding:9px 22px;font-size:.85rem;font-family:var(--font);font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;box-shadow:var(--s-brand)}
+.tb-primary:hover{background:var(--brand-dark);transform:translateY(-1px)}
+
+/* ── SECTIONS ── */
+.page-section{display:none}
+.page-section.active{display:block}
+.content{padding:36px 40px 90px;max-width:1160px}
+.hero{padding:54px 40px 0;max-width:1160px}
+.hero-badge{display:inline-flex;align-items:center;gap:9px;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);background:var(--brand-bg);border:1.5px solid rgba(61,90,241,.22);border-radius:99px;padding:7px 18px;margin-bottom:26px}
+.hero-badge .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-headline{font-size:2.9rem;font-weight:800;line-height:1.1;color:var(--text-1);letter-spacing:-.035em;margin-bottom:20px;max-width:720px}
+.hero-headline em{font-style:italic;color:var(--brand)}
+.hero-sub{font-size:1.08rem;color:var(--text-3);max-width:600px;line-height:1.9;margin-bottom:38px;font-weight:400}
+.cta-row{display:flex;gap:14px;margin-bottom:56px;flex-wrap:wrap}
+.btn-primary{background:var(--brand);color:#fff;border:none;border-radius:var(--r-lg);padding:15px 30px;font-family:var(--font);font-size:.95rem;font-weight:700;cursor:pointer;transition:all .22s;display:inline-flex;align-items:center;gap:10px;box-shadow:var(--s-brand)}
+.btn-primary:hover{background:var(--brand-dark);transform:translateY(-2px)}
+.btn-outline{background:var(--surface);color:var(--text-2);border:2px solid var(--border-med);border-radius:var(--r-lg);padding:15px 30px;font-family:var(--font);font-size:.95rem;font-weight:700;cursor:pointer;transition:all .22s;display:inline-flex;align-items:center;gap:10px}
+.btn-outline:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-bg)}
+
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:var(--r-xl);background:var(--surface);margin-bottom:44px;box-shadow:var(--s-md);overflow:hidden}
+.stat-cell{padding:26px 28px;border-right:1px solid var(--border);transition:background .2s}
+.stat-cell:last-child{border-right:none}
+.stat-cell:hover{background:var(--surface-2)}
+.stat-num{font-size:1.75rem;font-weight:800;color:var(--text-1);line-height:1.2;letter-spacing:-.02em}
+.stat-desc{font-size:.76rem;color:var(--text-3);margin-top:5px;font-weight:600;letter-spacing:.02em}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);margin-bottom:24px;overflow:hidden;box-shadow:var(--s-sm);transition:box-shadow .22s}
+.panel:hover{box-shadow:var(--s-md)}
+.panel-header{padding:18px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface-2)}
+.panel-title{font-size:.95rem;font-weight:800;color:var(--text-1);display:flex;align-items:center;gap:11px}
+.panel-title i{color:var(--brand)}
+.panel-body{padding:28px}
+
+.section-header{padding:40px 40px 0;max-width:1160px;margin-bottom:30px}
+.section-title{font-size:2rem;font-weight:800;color:var(--text-1);letter-spacing:-.028em;margin-bottom:10px}
+.section-desc{font-size:1rem;color:var(--text-3);font-style:italic;max-width:580px;line-height:1.85}
+
+/* ── ANALYSIS ── */
+.analysis-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+.atab{padding:10px 20px;border-radius:99px;border:1.5px solid var(--border);background:var(--surface);font-size:.86rem;font-weight:700;color:var(--text-3);cursor:pointer;transition:all .18s}
+.atab:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-bg)}
+.atab.active{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:var(--s-brand)}
+.vars-grid{display:flex;flex-wrap:wrap;gap:16px;margin:18px 0 16px}
+.var-card{flex:1;min-width:200px;background:var(--surface-2);border-radius:var(--r-lg);padding:16px 18px;border:1.5px solid var(--border);transition:border-color .15s}
+.var-card:focus-within{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-glow)}
+.var-label{font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--brand);display:block;margin-bottom:8px}
+.var-name-input{width:100%;background:var(--surface);border:1.5px solid var(--border-med);border-radius:var(--r-sm);padding:8px 12px;font-family:var(--font);font-size:.85rem;font-weight:600;color:var(--text-1);outline:none;transition:border-color .15s;margin-bottom:9px}
+.var-name-input:focus{border-color:var(--brand)}
+.var-name-input::placeholder{color:var(--text-4);font-weight:400}
+.var-data-input{width:100%;font-family:var(--mono);font-size:.76rem;background:var(--surface);border:1.5px solid var(--border-med);border-radius:var(--r-sm);padding:9px 12px;resize:vertical;outline:none;line-height:1.6;color:var(--text-2);transition:border-color .15s}
+.var-data-input:focus{border-color:var(--brand)}
+.var-data-hint{font-size:.71rem;color:var(--text-4);margin-top:6px}
+.cov-section{background:var(--surface-2);border-radius:var(--r-lg);padding:16px 18px;margin-top:12px;border:1.5px solid var(--border)}
+.cov-label{font-weight:700;font-size:.8rem;color:var(--text-2);margin-bottom:9px;display:block}
+.cov-input{width:100%;font-family:var(--mono);font-size:.76rem;background:var(--surface);border:1.5px solid var(--border-med);border-radius:var(--r-sm);padding:9px 12px;resize:vertical;outline:none}
+.options-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin:16px 0;padding:16px 20px;background:var(--surface-2);border-radius:var(--r-lg);border:1px solid var(--border)}
+.opt-label{font-size:.83rem;font-weight:700;color:var(--text-3)}
+.opt-select{background:var(--surface);border:1.5px solid var(--border-med);border-radius:var(--r-sm);padding:7px 12px;font-family:var(--font);font-size:.84rem;font-weight:600;color:var(--text-1);outline:none;cursor:pointer}
+.opt-select:focus{border-color:var(--brand)}
+.action-bar{display:flex;justify-content:center;gap:14px;margin:24px 0 10px}
+.run-btn{background:var(--brand);color:#fff;border:none;border-radius:var(--r-lg);padding:16px 56px;font-family:var(--font);font-size:1rem;font-weight:800;cursor:pointer;transition:all .22s;display:inline-flex;align-items:center;gap:11px;box-shadow:var(--s-brand);position:relative;overflow:hidden}
+.run-btn::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);transition:left .5s}
+.run-btn:hover{background:var(--brand-dark);transform:translateY(-2px);box-shadow:0 10px 32px rgba(61,90,241,.44)}
+.run-btn:hover::after{left:100%}
+.clear-btn{background:var(--surface-2);border:1.5px solid var(--border-med);color:var(--text-3);border-radius:var(--r-lg);padding:16px 28px;font-family:var(--font);font-size:.95rem;font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:10px}
+.clear-btn:hover{background:var(--surface-3);color:var(--text-1)}
+.results-panel{display:none;animation:fadeUp .4s ease}
+.results-panel.visible{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TABLES ── */
+.res-table-wrap{overflow-x:auto;margin:18px 0}
+.res-table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:700px}
+.res-table th{background:var(--surface-2);color:var(--text-2);font-size:.7rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:10px 12px;text-align:right;border:1px solid var(--border-med)}
+.res-table th:first-child{text-align:left}
+.res-table th.th-group{text-align:center;background:var(--brand-bg);color:var(--brand);border-bottom:2px solid var(--brand);font-size:.68rem}
+.res-table td{padding:9px 12px;border:1px solid var(--border);text-align:right;font-family:var(--mono);font-size:.8rem;color:var(--text-2)}
+.res-table td:first-child{text-align:left;font-family:var(--font);font-weight:700;color:var(--text-1);font-size:.85rem}
+.res-table .sig-star{color:var(--rose);font-weight:800;text-align:center}
+.res-table .row-bold td{font-weight:800;background:var(--brand-bg)}
+.res-table .row-bold td:first-child{color:var(--brand)}
+.res-table .td-std{color:var(--violet);font-family:var(--mono)}
+.res-table .col-divider{border-left:2px solid var(--brand) !important}
+
+/* ── UI COMPONENTS ── */
+.interp-box{background:var(--brand-bg);border:1.5px solid rgba(61,90,241,.20);border-radius:var(--r-lg);padding:24px 28px;margin-bottom:20px}
+.interp-title{font-size:.72rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--brand);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.interp-text{font-size:.92rem;color:var(--text-2);line-height:1.9}
+.interp-text strong{color:var(--text-1);font-weight:800}
+.export-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.exp-btn{background:var(--surface-2);border:1.5px solid var(--border);color:var(--text-2);border-radius:var(--r-md);padding:11px 22px;font-size:.86rem;font-family:var(--font);font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:9px}
+.exp-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:var(--s-brand)}
+.formula-box{background:var(--brand-bg);border:1.5px solid rgba(61,90,241,.20);border-radius:var(--r-lg);padding:16px 22px;font-family:var(--mono);font-size:.86rem;font-weight:500;color:var(--brand);text-align:center;margin:18px 0;letter-spacing:.01em}
+.alert{border-radius:var(--r-md);padding:14px 18px;margin:16px 0;font-size:.88rem;font-weight:700;display:flex;align-items:flex-start;gap:12px;border:1.5px solid}
+.alert-info{background:var(--brand-bg);border-color:rgba(61,90,241,.22);color:var(--text-2)}
+.alert-info i{color:var(--brand);margin-top:2px}
+.alert-warn{background:var(--amber-bg);border-color:var(--amber-border);color:var(--text-2)}
+.alert-err{background:var(--rose-bg);border-color:var(--rose-border);color:var(--rose)}
+.alert-err i{color:var(--rose);margin-top:2px}
+.res-sub-label{font-size:.76rem;font-weight:800;color:var(--text-3);text-transform:uppercase;letter-spacing:.10em;margin:20px 0 14px;padding-top:20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.res-sub-label:first-child{margin-top:0;padding-top:0;border-top:none}
+.res-sub-label i{color:var(--brand)}
+.doc-prose{font-size:.95rem;color:var(--text-2);line-height:1.95;margin-bottom:20px}
+.doc-prose strong{color:var(--text-1);font-weight:800}
+.doc-list{list-style:none;padding:0;margin:16px 0 20px}
+.doc-list li{display:flex;align-items:flex-start;gap:12px;padding:9px 0;font-size:.92rem;color:var(--text-2);border-bottom:1px solid var(--border);line-height:1.8}
+.doc-list li:last-child{border-bottom:none}
+.doc-list li::before{content:'→';color:var(--brand);font-size:.85rem;margin-top:3px;flex-shrink:0;font-weight:800;font-family:var(--mono)}
+.doc-list li strong{color:var(--text-1);font-weight:800}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.feature-card{padding:22px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);transition:all .22s;cursor:default}
+.feature-card:hover{border-color:var(--brand);box-shadow:0 6px 22px rgba(61,90,241,.14);transform:translateY(-3px);background:var(--surface)}
+.feature-icon{font-size:1.5rem;margin-bottom:14px;color:var(--brand)}
+.feature-title{font-weight:800;font-size:.95rem;color:var(--text-1);margin-bottom:8px}
+.feature-desc{font-size:.87rem;color:var(--text-3);line-height:1.7}
+.site-footer{border-top:1px solid var(--border);padding:32px 40px;text-align:center;background:var(--surface)}
+.site-footer p{font-size:.84rem;color:var(--text-4);line-height:2.1}
+.site-footer a{color:var(--brand);text-decoration:none}
+
+/* ── OPEN SOURCE BADGE ── */
+.oss-card{background:linear-gradient(135deg,rgba(61,90,241,.06) 0%,rgba(109,40,217,.06) 100%);border:1.5px solid rgba(61,90,241,.22);border-radius:var(--r-xl);padding:28px 32px;margin-top:24px;position:relative;overflow:hidden}
+.oss-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(61,90,241,.12) 0%,transparent 70%);border-radius:50%}
+.oss-title{font-size:1.05rem;font-weight:800;color:var(--text-1);margin-bottom:10px;display:flex;align-items:center;gap:11px}
+.oss-title i{color:var(--brand)}
+.oss-desc{font-size:.9rem;color:var(--text-2);line-height:1.85;margin-bottom:18px}
+.oss-steps{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.oss-step{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:12px 18px;font-size:.85rem;font-weight:700;color:var(--text-2);display:flex;align-items:center;gap:9px;min-width:180px}
+.oss-step i{color:var(--brand)}
+.oss-note{font-size:.8rem;color:var(--text-4);font-style:italic}
+
+/* ── LOADING ── */
+.loading-screen{position:fixed;inset:0;background:#08090f;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .4s}
+.loading-screen.out{opacity:0;pointer-events:none}
+.loading-spinner{width:48px;height:48px;border:3px solid rgba(61,90,241,.18);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-title{font-size:1.6rem;font-weight:800;color:#eef2ff;letter-spacing:-.02em}
+.loading-sub{font-size:.8rem;color:#3a4468;font-family:var(--mono)}
+
+/* ── DIAGRAM MODAL ── */
+.diagram-modal{display:none;position:fixed;inset:0;z-index:900;background:rgba(8,9,15,.88);backdrop-filter:blur(10px);align-items:center;justify-content:center}
+.diagram-modal.open{display:flex}
+.diagram-modal-inner{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-2xl);padding:32px;max-width:96vw;max-height:94vh;overflow:auto;box-shadow:var(--s-lg);position:relative;min-width:740px}
+.diagram-modal-close{position:absolute;top:16px;right:16px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-3);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .15s}
+.diagram-modal-close:hover{background:var(--rose-bg);border-color:var(--rose-border);color:var(--rose)}
+.diagram-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+.diagram-toolbar-title{font-size:1rem;font-weight:800;color:var(--text-1);margin-right:auto}
+.dt-btn{background:var(--surface-2);border:1.5px solid var(--border);color:var(--text-2);border-radius:var(--r-sm);padding:8px 16px;font-size:.83rem;font-family:var(--font);font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px}
+.dt-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+.dt-btn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.diagram-preview-wrap{margin:22px 0;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.diagram-open-btn{background:var(--brand);color:#fff;border:none;border-radius:var(--r-md);padding:10px 22px;font-size:.86rem;font-family:var(--font);font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px;box-shadow:var(--s-brand)}
+.diagram-open-btn:hover{background:var(--brand-dark)}
+
+/* ── SIMPLE SLOPES PLOT ── */
+.slopes-wrap{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin:18px 0}
+.slopes-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.slopes-toolbar-title{font-size:.76rem;font-weight:800;color:var(--text-1);text-transform:uppercase;letter-spacing:.09em;margin-right:auto;display:flex;align-items:center;gap:8px}
+.slopes-toolbar-title i{color:var(--brand)}
+.slopes-toggle-btn{background:var(--surface);border:1.5px solid var(--border);color:var(--text-2);border-radius:var(--r-sm);padding:7px 14px;font-size:.8rem;font-family:var(--font);font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:7px}
+.slopes-toggle-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+.slopes-toggle-btn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.slopes-canvas-wrap{display:flex;justify-content:center}
+.slopes-canvas-wrap canvas{width:100%;max-width:700px;height:auto;border-radius:var(--r-md);display:block}
+.slopes-btn-row{display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.slopes-expand-btn{background:var(--brand);color:#fff;border:none;border-radius:var(--r-md);padding:9px 20px;font-size:.84rem;font-family:var(--font);font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:7px;box-shadow:var(--s-brand)}
+.slopes-expand-btn:hover{background:var(--brand-dark)}
+.slopes-dl-btn{background:var(--surface-3);color:var(--text-2);border:1.5px solid var(--border-med);border-radius:var(--r-md);padding:9px 20px;font-size:.84rem;font-family:var(--font);font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:7px}
+.slopes-dl-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+
+/* ── SLOPES FULLSCREEN MODAL ── */
+.slopes-modal{display:none;position:fixed;inset:0;z-index:950;background:rgba(8,9,15,.92);backdrop-filter:blur(12px);align-items:center;justify-content:center}
+.slopes-modal.open{display:flex}
+.slopes-modal-inner{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-2xl);padding:28px 32px;max-width:97vw;max-height:95vh;overflow:auto;box-shadow:var(--s-lg);position:relative;display:flex;flex-direction:column;gap:16px;width:900px}
+.slopes-modal-close{position:absolute;top:16px;right:16px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-3);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all .15s}
+.slopes-modal-close:hover{background:var(--rose-bg);border-color:var(--rose-border);color:var(--rose)}
+.slopes-modal-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.slopes-modal-title{font-size:1rem;font-weight:800;color:var(--text-1);display:flex;align-items:center;gap:10px;margin-right:auto}
+
+/* ── CITATION BOX ── */
+.citation-box{position:relative;background:var(--brand-bg);border:1.5px solid rgba(61,90,241,.20);border-radius:var(--r-lg);padding:16px 22px;font-family:var(--mono);font-size:.82rem;line-height:1.7;letter-spacing:0;color:var(--brand);text-align:left;margin:18px 0}
+.citation-copy-btn{position:absolute;top:10px;right:10px;background:var(--brand);color:#fff;border:none;border-radius:var(--r-sm);padding:6px 14px;font-size:.76rem;font-family:var(--font);font-weight:700;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:6px}
+.citation-copy-btn:hover{background:var(--brand-dark)}
+
+/* ── DEVELOPER CARD ── */
+.dev-card{background:linear-gradient(135deg,#08090f 0%,#141829 100%);border:1px solid #1a1d2e;border-radius:var(--r-xl);padding:36px;margin-bottom:24px;position:relative;overflow:hidden}
+.dev-card::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(61,90,241,.18) 0%,transparent 70%);border-radius:50%}
+.dev-avatar-row{display:flex;align-items:center;gap:22px;margin-bottom:24px}
+.dev-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#3d5af1,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:#fff;font-weight:800;flex-shrink:0;box-shadow:0 0 0 3px rgba(61,90,241,.30),var(--s-brand)}
+.dev-info{flex:1}
+.dev-name{font-size:1.35rem;font-weight:800;color:#eef2ff;letter-spacing:-.02em;margin-bottom:4px}
+.dev-title{font-size:.84rem;color:var(--st-3);font-weight:500;line-height:1.6}
+.dev-affil{font-size:.78rem;color:var(--st-4);margin-top:4px}
+.dev-bio{font-size:.88rem;color:var(--st-2);line-height:1.8;margin-bottom:24px;border-left:3px solid #3d5af1;padding-left:16px}
+.dev-connect-label{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--st-4);margin-bottom:12px}
+.dev-connect-btns{display:flex;flex-wrap:wrap;gap:12px}
+.dev-btn{display:inline-flex;align-items:center;gap:9px;padding:11px 22px;border-radius:var(--r-md);font-size:.84rem;font-family:var(--font);font-weight:700;text-decoration:none;cursor:pointer;transition:all .22s;border:1.5px solid}
+.dev-btn-rg{background:rgba(0,116,178,.12);border-color:rgba(0,116,178,.35);color:#5bb8e8}
+.dev-btn-rg:hover{background:#0074b2;color:#fff;border-color:#0074b2;transform:translateY(-2px)}
+.dev-btn-orcid{background:rgba(166,206,57,.10);border-color:rgba(166,206,57,.32);color:#a6ce39}
+.dev-btn-orcid:hover{background:#a6ce39;color:#fff;border-color:#a6ce39;transform:translateY(-2px)}
+.dev-btn-gs{background:rgba(66,133,244,.10);border-color:rgba(66,133,244,.32);color:#7ba9f7}
+.dev-btn-gs:hover{background:#4285f4;color:#fff;border-color:#4285f4;transform:translateY(-2px)}
+.dev-btn-email{background:rgba(61,90,241,.10);border-color:rgba(61,90,241,.32);color:var(--brand-light)}
+.dev-btn-email:hover{background:var(--brand);color:#fff;border-color:var(--brand);transform:translateY(-2px)}
+.dev-btn-web{background:rgba(4,120,87,.12);border-color:rgba(4,120,87,.32);color:#34d399}
+.dev-btn-web:hover{background:#047857;color:#fff;border-color:#047857;transform:translateY(-2px)}
+
+/* ── DARK THEME ── */
+[data-theme="dark"]{
+  --bg:#080c18;--surface:#0e1225;--surface-2:#141829;--surface-3:#1a2035;
+  --border:#222840;--border-med:#2d3858;--text-1:#eef2ff;--text-2:#b8c6e4;
+  --text-3:#6878a8;--text-4:#3a4468;--brand-bg:rgba(61,90,241,.11);--brand-glow:rgba(61,90,241,.24)
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:var(--s-lg)}
+  .main{margin-left:0}
+  .hamburger{display:flex}
+  .hero{padding:26px 22px 0}
+  .hero-headline{font-size:2.1rem}
+  .content,.section-header{padding:20px 20px}
+  .stats-strip{grid-template-columns:1fr 1fr}
+  .topbar{padding:0 18px}
+  .dev-avatar-row{flex-direction:column;align-items:flex-start}
+  .slopes-modal-inner{width:98vw;padding:18px}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-spinner"></div>
+  <div class="loading-title">MedModr</div>
+  <div class="loading-sub">Mediation & Moderation Software · v1.0</div>
+</div>
+
+<!-- PATH DIAGRAM MODAL -->
+<div class="diagram-modal" id="diagramModal">
+  <div class="diagram-modal-inner">
+    <button class="diagram-modal-close" onclick="closeDiagramModal()"><i class="fas fa-times"></i></button>
+    <div class="diagram-toolbar">
+      <span class="diagram-toolbar-title"><i class="fas fa-project-diagram" style="color:var(--brand);margin-right:8px"></i>Path Diagram</span>
+      <button class="dt-btn active" id="btnUnstd" onclick="setCoefMode('unstd')"><i class="fas fa-ruler"></i> Unstandardized</button>
+      <button class="dt-btn" id="btnStd" onclick="setCoefMode('std')"><i class="fas fa-percentage"></i> Standardized</button>
+      <button class="dt-btn active" id="btnPval" onclick="toggleDiagPval()"><i class="fas fa-star-of-david"></i> Hide p-values</button>
+      <button class="dt-btn" onclick="downloadDiagramPNG()"><i class="fas fa-download"></i> Download PNG</button>
+    </div>
+    <div id="modalDiagramContainer" style="display:flex;justify-content:center;min-height:300px"></div>
+  </div>
+</div>
+
+<!-- SIMPLE SLOPES FULLSCREEN MODAL -->
+<div class="slopes-modal" id="slopesModal">
+  <div class="slopes-modal-inner">
+    <button class="slopes-modal-close" onclick="closeSlopesModal()"><i class="fas fa-times"></i></button>
+    <div class="slopes-modal-toolbar">
+      <div class="slopes-modal-title"><i class="fas fa-chart-line" style="color:var(--brand)"></i><span id="slopesModalTitle">Simple Slopes</span></div>
+      <button class="slopes-toggle-btn active" id="modalAnnotBtn" onclick="toggleSlopesAnnot()"><i class="fas fa-tag"></i> <span id="modalAnnotLabel">Hide Labels</span></button>
+      <button class="slopes-dl-btn" onclick="downloadSlopesHiRes()"><i class="fas fa-download"></i> Download Hi-Res PNG</button>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <canvas id="slopesModalCanvas" width="860" height="520" style="width:100%;max-width:860px;height:auto;border-radius:12px;display:block"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark" onclick="showSection('home')">
+      <div class="logo-icon"><i class="fas fa-project-diagram"></i></div>
+      <div class="logo-text"><span class="logo-name">MedModr</span></div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="nav-sec-label">Navigation</span>
+    <div class="nav-item active" data-sec="home" onclick="showSection('home')"><i class="fas fa-home"></i> Home</div>
+    <div class="nav-item" data-sec="analysis" onclick="showSection('analysis')"><i class="fas fa-flask"></i> Analysis</div>
+    <span class="nav-sec-label">Resources</span>
+    <div class="nav-item" data-sec="docs" onclick="showSection('docs')"><i class="fas fa-book-open"></i> Documentation</div>
+    <div class="nav-item" data-sec="developer" onclick="showSection('developer')"><i class="fas fa-user-circle"></i> Developer</div>
+    <div class="nav-item" data-sec="about" onclick="showSection('about')"><i class="fas fa-info-circle"></i> About</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="theme-row">
+      <span class="theme-label">Appearance</span>
+      <button class="theme-btn" id="themeBtn"><i class="fas fa-moon" id="themeIcon"></i> <span id="themeLabel">Dark</span></button>
+    </div>
+    <div class="ver-badge">v1.0 · Browser-based · Free</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+      <div class="breadcrumb"><span>MedModr</span><span class="sep">/</span><span class="cur" id="topbarSection">Home</span></div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-ghost" onclick="showSection('docs')"><i class="fas fa-book"></i> Docs</button>
+      <button class="tb-primary" onclick="showSection('analysis')"><i class="fas fa-play"></i> Start Analysis</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="page-section active" id="section-home">
+    <div class="hero">
+      <div class="hero-badge"><span class="dot"></span> Statistical Analysis Software</div>
+      <h1 class="hero-headline">Mediation &amp; Moderation,<br><em>done right.</em></h1>
+      <p class="hero-sub">Browser-based statistical analysis for simple mediation, serial mediation, moderation, and moderated mediation. Full OLS with both unstandardized and standardized coefficients, exact CIs, bootstrapping, interactive path diagrams, annotated simple slopes plots, and APA reporting.</p>
+      <div class="cta-row">
+        <button class="btn-primary" onclick="showSection('analysis')"><i class="fas fa-play-circle"></i> Start Analysis</button>
+        <button class="btn-outline" onclick="showSection('docs')"><i class="fas fa-book-open"></i> Documentation</button>
+      </div>
+    </div>
+    <div class="content" style="padding-top:0">
+      <div class="stats-strip">
+        <div class="stat-cell"><div class="stat-num">4</div><div class="stat-desc">Analysis Types</div></div>
+        <div class="stat-cell"><div class="stat-num">OLS</div><div class="stat-desc">Matrix Regression</div></div>
+        <div class="stat-cell"><div class="stat-num">b + β</div><div class="stat-desc">Both Coefficients</div></div>
+        <div class="stat-cell"><div class="stat-num">Bootstrap</div><div class="stat-desc">Indirect Effect CIs</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-star"></i> Key Features</div></div>
+        <div class="panel-body">
+          <div class="feature-grid">
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-arrow-right"></i></div><div class="feature-title">Simple Mediation</div><div class="feature-desc">X → M → Y with full path coefficients (b and β), Sobel test, indirect effect CIs, and interactive path diagram.</div></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-share-alt"></i></div><div class="feature-title">Serial Mediation</div><div class="feature-desc">X → M1 → M2 → Y with specific indirect paths, total indirect effects, and bootstrapped CIs.</div></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-exchange-alt"></i></div><div class="feature-title">Moderation</div><div class="feature-desc">X × W → Y with both unstandardized and standardized coefficients in every table. Simple slopes at ±1 SD and mean.</div></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-project-diagram"></i></div><div class="feature-title">Moderated Mediation</div><div class="feature-desc">PROCESS-consistent b-path (Y ~ X + M only). Conditional indirect effects, index of moderated mediation.</div></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-chart-line"></i></div><div class="feature-title">Annotated Slopes Plot</div><div class="feature-desc">Slopes plot with b and p-value embedded inside each line label. Toggle annotations on/off. Full screen + hi-res download.</div></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-download"></i></div><div class="feature-title">Export &amp; APA Reporting</div><div class="feature-desc">APA-formatted summaries, Word document export, and copy-to-clipboard for manuscripts.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="site-footer">
+  <p>
+    MedModr © <span id="yr"></span> - Present<br>
+    Free, browser-based. All computations run entirely client-side. Your data never leaves your device.<br>
+    
+    Site built in Ghana by 
+    <a href="https://mudasiribrahim.vercel.app/" target="_blank" rel="noopener noreferrer">
+      Mudasir Mohammed Ibrahim
+    </a>
+    <br>
+
+    <!-- SOURCE CODE LINK -->
+    <a href="https://github.com/mudassiribrahim12/MedModr-html-version" target="_blank" rel="noopener noreferrer">
+      View Source Code
+    </a>
+  </p>
+</div>
+  </div>
+
+  <!-- ANALYSIS -->
+  <div class="page-section" id="section-analysis">
+    <div class="section-header">
+      <h2 class="section-title">Mediation & Moderation Analysis</h2>
+      <p class="section-desc">Paste one value per line (no header). All variables must have equal N. Interactions, mean-centering, and standardized coefficients are computed automatically.</p>
+    </div>
+    <div class="content" style="padding-top:0">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-layer-group"></i> Analysis Type</div></div>
+        <div class="panel-body">
+          <div class="analysis-tabs" id="analysisTabs">
+            <button class="atab active" data-type="simple">Simple Mediation<br><span style="font-size:.72rem;opacity:.65;font-weight:500">X → M → Y</span></button>
+            <button class="atab" data-type="serial">Serial Mediation<br><span style="font-size:.72rem;opacity:.65;font-weight:500">X → M1 → M2 → Y</span></button>
+            <button class="atab" data-type="moderation">Moderation<br><span style="font-size:.72rem;opacity:.65;font-weight:500">X × W → Y</span></button>
+            <button class="atab" data-type="modmed">Moderated Mediation<br><span style="font-size:.72rem;opacity:.65;font-weight:500">Conditional Indirect Effect</span></button>
+          </div>
+          <div id="varsPanel"></div>
+          <div class="cov-section">
+            <label class="cov-label"><i class="fas fa-paperclip" style="color:var(--brand);margin-right:6px"></i> Covariates (optional) — first row = variable names, subsequent rows = data</label>
+            <textarea class="cov-input" id="covInput" rows="3" placeholder="age  education&#10;25 16&#10;30 18&#10;28 17"></textarea>
+            <div style="font-size:.72rem;color:var(--text-4);margin-top:5px">Each column = one covariate. Mean-centered automatically.</div>
+          </div>
+          <div class="options-row">
+            <span class="opt-label">Confidence level:</span>
+            <select class="opt-select" id="confLevel"><option value="0.95">95%</option><option value="0.99">99%</option><option value="0.90">90%</option></select>
+            <span class="opt-label">Bootstrap samples:</span>
+            <select class="opt-select" id="bootSamples"><option value="0">None (Sobel only)</option><option value="1000">1,000</option><option value="5000" selected>5,000</option><option value="10000">10,000</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="action-bar">
+        <button class="run-btn" id="runBtn"><i class="fas fa-flask"></i> Run Analysis</button>
+        <button class="clear-btn" id="clearBtn"><i class="fas fa-trash-alt"></i> Clear</button>
+      </div>
+      <div class="results-panel" id="resultsPanel"></div>
+    </div>
+  </div>
+
+  <!-- DOCS -->
+  <div class="page-section" id="section-docs">
+    <div class="section-header"><h2 class="section-title">Documentation</h2><p class="section-desc">Statistical methodology, coefficient definitions, CI notes, and contributing.</p></div>
+    <div class="content" style="padding-top:0">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-square-root-alt"></i> Statistical Methodology</div></div>
+        <div class="panel-body">
+          <p class="doc-prose">MedModr uses <strong>Ordinary Least Squares (OLS) regression via matrix algebra</strong>. Every table reports both <strong>unstandardized (b)</strong> and <strong>standardized (β)</strong> coefficients for all predictors.</p>
+          <div class="formula-box">β = (X'X)⁻¹X'y &nbsp;|&nbsp; SE(β) = √[MSE · diag(X'X)⁻¹] &nbsp;|&nbsp; t = b/SE &nbsp;|&nbsp; CI = b ± t*(df,α/2) × SE</div>
+          <ul class="doc-list">
+            <li><strong>Unstandardized b:</strong> Raw regression coefficient. Interpreted in original units.</li>
+            <li><strong>Standardized β:</strong> Computed by running the identical regression on z-scored variables. Allows comparison of effect sizes across predictors.</li>
+            <li><strong>Moderated Mediation b-path:</strong> Y regressed on X and M only (not W) — consistent with PROCESS Model 7.</li>
+            <li><strong>Indirect effects:</strong> Product of path coefficients (a×b). Bootstrap CIs use the percentile method.</li>
+            <li><strong>Simple Slopes Plot:</strong> Each slope line legend label (Low/Mean/High) includes the slope coefficient b and p-value directly within it. Users can toggle these annotations on or off using the "Hide/Show Labels" button.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fab fa-github"></i> Open Source &amp; Contributing</div></div>
+        <div class="panel-body">
+          <p class="doc-prose">MedModr is a <strong>free, open-source project</strong> and is actively maintained. Researchers, statisticians, and developers are welcome to fork the repository or contribute improvements.</p>
+          <div class="oss-card">
+            <div class="oss-title"><i class="fas fa-code-branch"></i> Get Involved</div>
+            <p class="oss-desc">Whether you want to add a new analysis type, improve the visualisation engine, fix a bug, or translate the interface, contributions of all sizes are appreciated. The entire codebase is a single self-contained HTML file — no build tools required.</p>
+            <div class="oss-steps">
+              <div class="oss-step"><i class="fas fa-code-branch"></i> Fork the repository</div>
+              <div class="oss-step"><i class="fas fa-wrench"></i> Make your changes</div>
+              <div class="oss-step"><i class="fas fa-paper-plane"></i> Submit a pull request</div>
+            </div>
+            <div class="oss-note">Feature ideas, bug reports, and discussion are all welcome via the GitHub Issues tracker.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEVELOPER -->
+  <div class="page-section" id="section-developer">
+    <div class="section-header"><h2 class="section-title">Developer</h2><p class="section-desc">Connect with the developer of MedModr.</p></div>
+    <div class="content" style="padding-top:0">
+      <div class="dev-card">
+        <div class="dev-avatar-row">
+            <div class="dev-avatar">👨‍💻</div>
+          <div class="dev-info">
+            <div class="dev-name">Mudasir Mohammed Ibrahim</div>
+          </div>
+        </div>
+        <p class="dev-bio">MedModr was built to provide researchers with a free, accurate, and accessible tool for mediation and moderation analysis entirely in the browser. If you use this tool in your research, feel free to connect or reach out.</p>
+        <div class="dev-connect-label"><i class="fas fa-link" style="margin-right:6px"></i> Connect with me</div>
+        <div class="dev-connect-btns">
+          <a class="dev-btn dev-btn-web" href="https://mudasiribrahim.vercel.app/" target="_blank" rel="noopener"><i class="fas fa-globe"></i> mudasiribrahim.com</a>
+          <a class="dev-btn dev-btn-rg" href="https://www.researchgate.net/profile/Mudasir-Ibrahim" target="_blank" rel="noopener"><i class="fas fa-flask"></i> ResearchGate</a>
+          <a class="dev-btn dev-btn-orcid" href="https://orcid.org/0000-0002-9049-8222" target="_blank" rel="noopener"><i class="fas fa-id-badge"></i> ORCID</a>
+          <a class="dev-btn dev-btn-gs" href="https://scholar.google.com/citations?user=xEFzAvgAAAAJ&hl=en" target="_blank" rel="noopener"><i class="fas fa-graduation-cap"></i> Google Scholar</a>
+          <a class="dev-btn dev-btn-email" href="mailto:mudassiribrahim30@gmail.com"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-file-alt"></i> Citation</div></div>
+        <div class="panel-body">
+          <p class="doc-prose">If you use MedModr in your research, please cite it as:</p>
+          <div class="citation-box" id="citationText">
+            <button class="citation-copy-btn" id="citCopyBtn" onclick="copyCitation()"><i class="fas fa-copy"></i> Copy</button>
+            Ibrahim, M. M. (<span id="citeyear"></span>). <em>MedModr: A browser-based mediation and moderation analysis suite</em> (Version 1.0) [Software]. Available from https://medmodr.vercel.app
+          </div>
+          <p class="doc-prose" style="font-size:.82rem;color:var(--text-4);margin-top:0">Click <strong>Copy</strong> to copy the full citation to your clipboard.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="page-section" id="section-about">
+    <div class="section-header"><h2 class="section-title">About MedModr</h2><p class="section-desc">Free, browser-based statistical software for mediation and moderation analysis.</p></div>
+    <div class="content" style="padding-top:0">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-info-circle"></i> About This Tool</div></div>
+        <div class="panel-body">
+          <p class="doc-prose">MedModr is a free web application for mediation and moderation analysis. All statistical computations run entirely in your browser — no data is sent to any server, ever.</p>
+          <ul class="doc-list">
+            <li><strong>No login required</strong> — use it directly in your browser</li>
+            <li><strong>Privacy-first</strong> — all computation is client-side</li>
+            <li><strong>Both b and β</strong> — every regression table shows unstandardized and standardized coefficients side by side</li>
+            <li><strong>Annotated simple slopes</strong> — b and p-value shown inside each slope label; toggle on/off</li>
+            <li><strong>Automatic interactions</strong> — mean-centering and X×W are handled behind the scenes</li>
+            <li><strong>PROCESS/R-consistent moderated mediation</strong> — b-path is Y ~ X + M only</li>
+            <li><strong>Built in Ghana 🇬🇭</strong> — by Mudasir Mohammed Ibrahim</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  MATH UTILITIES
+// ══════════════════════════════════════════════════════
+function mean(a){return a.reduce((s,v)=>s+v,0)/a.length}
+function sd(a){const m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)**2,0)/Math.max(1,a.length-1))}
+function centre(a){const m=mean(a);return a.map(v=>v-m)}
+function zscore(a){const m=mean(a),s=sd(a)||1;return a.map(v=>(v-m)/s)}
+
+function erf(x){
+  const a=[.254829592,-.284496736,1.421413741,-1.453152027,1.061405429],p=.3275911;
+  const sign=x<0?-1:1;x=Math.abs(x);const t=1/(1+p*x);
+  return sign*(1-(((((a[4]*t+a[3])*t)+a[2])*t+a[1])*t+a[0])*t*Math.exp(-x*x));
+}
+function normalCDF(z){return(1+erf(z/Math.sqrt(2)))/2}
+function gammaLn(z){
+  const g=7,c=[.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,-176.61502916214059,12.507343278686905,-.13857109526572012,9.9843695780195716e-6,1.5056327351493116e-7];
+  if(z<.5)return Math.log(Math.PI/Math.sin(Math.PI*z))-gammaLn(1-z);
+  z-=1;let x=c[0];for(let i=1;i<g+2;i++)x+=c[i]/(z+i);
+  const t=z+g+.5;return .5*Math.log(2*Math.PI)+(z+.5)*Math.log(t)-t+Math.log(x);
+}
+function betaCF(a,b,x){
+  const MAXIT=200,EPS=3e-7,FPMIN=1e-30,qab=a+b,qap=a+1,qam=a-1;
+  let c=1,d=1-qab*x/qap;if(Math.abs(d)<FPMIN)d=FPMIN;d=1/d;let h=d;
+  for(let m=1;m<=MAXIT;m++){
+    const m2=2*m;let aa=m*(b-m)*x/((qam+m2)*(a+m2));
+    d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;d=1/d;h*=d*c;
+    aa=-(a+m)*(qab+m)*x/((a+m2)*(qap+m2));
+    d=1+aa*d;if(Math.abs(d)<FPMIN)d=FPMIN;c=1+aa/c;if(Math.abs(c)<FPMIN)c=FPMIN;
+    d=1/d;const del=d*c;h*=del;if(Math.abs(del-1)<EPS)break;
+  }
+  return h;
+}
+function incompleteBeta(a,b,x){
+  if(x<0||x>1)return NaN;if(x===0)return 0;if(x===1)return 1;
+  const lbeta=gammaLn(a)+gammaLn(b)-gammaLn(a+b);
+  return Math.exp(Math.log(x)*a+Math.log(1-x)*b-lbeta)/a*betaCF(a,b,x);
+}
+function tcdf2(t,df){
+  if(df<=0)return 1;
+  return Math.min(1,Math.max(0,incompleteBeta(df/2,.5,df/(df+t*t))));
+}
+function tQuantile(df,alpha){
+  const p=1-alpha/2,a=p-.5,r=a*a;
+  let z=a*(2.515517+r*(.802853+r*.010328))/(1+r*(1.432788+r*(.189269+r*.001308)));
+  z+=((z**3+z)/(4*df));
+  z+=((5*z**5+16*z**3+3*z)/(96*df*df));
+  for(let i=0;i<8;i++){
+    const Ft=1-tcdf2(z,df)/2,err=Ft-p;
+    const lnpdf=gammaLn((df+1)/2)-gammaLn(df/2)-.5*Math.log(df*Math.PI)+(-(df+1)/2)*Math.log(1+z*z/df);
+    const pdf=Math.exp(lnpdf);if(pdf<1e-14)break;z-=err/pdf;
+  }
+  return z;
+}
+function fCDF(d1,d2,f){return incompleteBeta(d1/2,d2/2,d1*f/(d1*f+d2))}
+function matInv(mat){
+  const n=mat.length;let a=mat.map(r=>[...r]);
+  let id=Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>i===j?1:0));
+  for(let i=0;i<n;i++){
+    let mx=i;for(let k=i+1;k<n;k++)if(Math.abs(a[k][i])>Math.abs(a[mx][i]))mx=k;
+    if(Math.abs(a[mx][i])<1e-14)return null;
+    if(mx!==i){[a[i],a[mx]]=[a[mx],a[i]];[id[i],id[mx]]=[id[mx],id[i]];}
+    const d=a[i][i];for(let j=0;j<n;j++){a[i][j]/=d;id[i][j]/=d;}
+    for(let k=0;k<n;k++)if(k!==i){const f=a[k][i];for(let j=0;j<n;j++){a[k][j]-=f*a[i][j];id[k][j]-=f*id[i][j];}}
+  }
+  return id;
+}
+function buildMat(cols){const n=cols[0].length;return Array.from({length:n},(_,i)=>cols.map(c=>c[i]))}
+
+// ── OLS ──
+function ols(y,Xmat,names,cl=.95){
+  const n=y.length,k=Xmat[0].length;
+  const X=Xmat.map(r=>[1,...r]);
+  const Xt=X[0].map((_,c)=>X.map(r=>r[c]));
+  const XtX=Xt.map(ri=>Xt.map(ci=>ri.reduce((s,v,i)=>s+v*ci[i],0)));
+  const XtY=Xt.map(ri=>ri.reduce((s,v,i)=>s+v*y[i],0));
+  const inv=matInv(XtX);if(!inv)return null;
+  const coef=inv.map(r=>r.reduce((s,v,i)=>s+v*XtY[i],0));
+  const yhat=X.map(r=>r.reduce((s,v,i)=>s+v*coef[i],0));
+  const resid=y.map((yi,i)=>yi-yhat[i]);
+  const rss=resid.reduce((s,r)=>s+r*r,0);
+  const ybar=mean(y),tss=y.reduce((s,v)=>s+(v-ybar)**2,0);
+  const r2=1-rss/tss,df_res=n-k-1,df_mod=k;
+  const r2adj=1-(1-r2)*(n-1)/df_res,mse=rss/df_res;
+  const se=coef.map((_,i)=>Math.sqrt(mse*Math.abs(inv[i][i])));
+  const tv=coef.map((b,i)=>se[i]>0?b/se[i]:0);
+  const pv=tv.map(t=>tcdf2(Math.abs(t),df_res));
+  const tc=tQuantile(df_res,1-cl);
+  const cilo=coef.map((b,i)=>b-tc*se[i]),cihi=coef.map((b,i)=>b+tc*se[i]);
+  const f=(r2/df_mod)/((1-r2)/df_res),fp=1-fCDF(df_mod,df_res,f);
+  return{coef,se,t:tv,p:pv,cilo,cihi,r2,r2adj,f,fp,df:df_res,df_mod,n,mse,names:['Intercept',...names]};
+}
+
+// ── FORMATTING ──
+function fmtp(p){return p<.001?'<.001':p.toFixed(4)}
+function fmtv(v,d=4){if(v===undefined||v===null||isNaN(v))return 'N/A';return Number(v.toFixed(d))}
+function pStar(p){return p<.001?'***':p<.01?'**':p<.05?'*':''}
+function parseNums(raw){
+  if(!raw||!raw.trim())return null;
+  const vals=raw.trim().split(/\r?\n/).filter(l=>l.trim()).map(l=>parseFloat(l.trim()));
+  return vals.some(isNaN)?null:vals;
+}
+
+// ══════════════════════════════════════════════════════
+//  BOOTSTRAP
+// ══════════════════════════════════════════════════════
+function bootCI_simple(x,m,y,nB,cl,covs=[]){
+  const n=x.length,alpha=1-cl,samp=[];
+  for(let b=0;b<nB;b++){
+    const idx=Array.from({length:n},()=>Math.floor(Math.random()*n));
+    const bx=idx.map(i=>x[i]),bm=idx.map(i=>m[i]),by=idx.map(i=>y[i]);
+    const bc=covs.map(c=>idx.map(i=>c[i]));
+    const rM=ols(bm,buildMat([bx,...bc]),['X',...bc.map((_,i)=>'C'+i)]);
+    const rY=ols(by,buildMat([bx,bm,...bc]),['X','M',...bc.map((_,i)=>'C'+i)]);
+    if(!rM||!rY)continue;
+    samp.push(rM.coef[1]*rY.coef[2]);
+  }
+  samp.sort((a,b)=>a-b);if(samp.length<10)return null;
+  const lo=Math.floor(alpha/2*samp.length),hi=Math.ceil((1-alpha/2)*samp.length)-1;
+  return{effect:mean(samp),se:sd(samp),lo:samp[Math.max(0,lo)],hi:samp[Math.min(samp.length-1,hi)]};
+}
+function bootCI_serial(x,m1,m2,y,nB,cl,covs=[]){
+  const n=x.length,alpha=1-cl,paths={xm1m2y:[],xm1y:[],xm2y:[]};
+  for(let b=0;b<nB;b++){
+    const idx=Array.from({length:n},()=>Math.floor(Math.random()*n));
+    const bx=idx.map(i=>x[i]),bm1=idx.map(i=>m1[i]),bm2=idx.map(i=>m2[i]),by=idx.map(i=>y[i]);
+    const bc=covs.map(c=>idx.map(i=>c[i]));
+    const rM1=ols(bm1,buildMat([bx,...bc]),['X']);
+    const rM2=ols(bm2,buildMat([bx,bm1,...bc]),['X','M1']);
+    const rY=ols(by,buildMat([bx,bm1,bm2,...bc]),['X','M1','M2']);
+    if(!rM1||!rM2||!rY)continue;
+    const a1=rM1.coef[1],d21=rM2.coef[2],a2=rM2.coef[1],b2=rY.coef[3],b1=rY.coef[2];
+    paths.xm1m2y.push(a1*d21*b2);paths.xm1y.push(a1*b1);paths.xm2y.push(a2*b2);
+  }
+  function pci(arr){
+    if(arr.length<10)return{effect:0,se:0,lo:0,hi:0};
+    arr.sort((a,b)=>a-b);const lo=Math.floor(alpha/2*arr.length),hi=Math.ceil((1-alpha/2)*arr.length)-1;
+    return{effect:mean(arr),se:sd(arr),lo:arr[Math.max(0,lo)],hi:arr[Math.min(arr.length-1,hi)]};
+  }
+  return{xm1m2y:pci(paths.xm1m2y),xm1y:pci(paths.xm1y),xm2y:pci(paths.xm2y)};
+}
+function bootCI_modmed(xR,mR,yR,wR,nB,cl,covs=[]){
+  const n=xR.length,alpha=1-cl,sdWo=sd(wR),res={low:[],mid:[],high:[],index:[]};
+  for(let b=0;b<nB;b++){
+    const idx=Array.from({length:n},()=>Math.floor(Math.random()*n));
+    const bxR=idx.map(i=>xR[i]),bwR=idx.map(i=>wR[i]),bm=idx.map(i=>mR[i]),by=idx.map(i=>yR[i]);
+    const bc=covs.map(c=>idx.map(i=>c[i]));
+    const bxC=centre(bxR),bwC=centre(bwR),bxw=bxC.map((v,i)=>v*bwC[i]);
+    const rM=ols(bm,buildMat([bxC,bwC,bxw,...bc]),['X','W','XW',...bc.map((_,i)=>'C'+i)]);
+    const rY=ols(by,buildMat([bxC,bm,...bc]),['X','M',...bc.map((_,i)=>'C'+i)]);
+    if(!rM||!rY)continue;
+    const a1=rM.coef[1],a3=rM.coef[3],bB=rY.coef[2];
+    res.low.push((a1+a3*(-sdWo))*bB);res.mid.push(a1*bB);res.high.push((a1+a3*sdWo)*bB);res.index.push(a3*bB);
+  }
+  function pci(arr){
+    if(arr.length<10)return{effect:0,se:0,lo:0,hi:0};
+    arr.sort((a,b)=>a-b);const lo=Math.floor(alpha/2*arr.length),hi=Math.ceil((1-alpha/2)*arr.length)-1;
+    return{effect:mean(arr),se:sd(arr),lo:arr[Math.max(0,lo)],hi:arr[Math.min(arr.length-1,hi)]};
+  }
+  return{low:pci(res.low),mid:pci(res.mid),high:pci(res.high),index:pci(res.index)};
+}
+
+// ══════════════════════════════════════════════════════
+//  RENDER HELPERS
+// ══════════════════════════════════════════════════════
+function renderDesc(vars){
+  let rows='';
+  vars.forEach(v=>{
+    const n=v.vals.length,m=mean(v.vals),s=sd(v.vals),mn=Math.min(...v.vals),mx=Math.max(...v.vals);
+    rows+=`<tr><td>${v.name}</td><td>${n}</td><td>${fmtv(m)}</td><td>${fmtv(s)}</td><td>${fmtv(mn)}</td><td>${fmtv(mx)}</td></tr>`;
+  });
+  return `<div class="panel" style="margin-bottom:18px">
+    <div class="panel-header"><div class="panel-title"><i class="fas fa-table"></i> Descriptive Statistics</div></div>
+    <div class="panel-body"><div class="res-table-wrap"><table class="res-table">
+      <thead><tr><th>Variable</th><th>N</th><th>Mean</th><th>SD</th><th>Min</th><th>Max</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div></div></div>`;
+}
+
+function renderReg(res,resZ,outcome,confLabel){
+  const pct=confLabel.replace('%','');
+  const fStr=isNaN(res.f)?'N/A':fmtv(res.f);
+  const fpStr=isNaN(res.fp)?'N/A':fmtp(res.fp);
+  const hdr=`<div style="font-size:.83rem;color:var(--text-3);margin-bottom:10px;font-weight:600">
+    <strong style="color:var(--text-1)">OUTCOME: ${outcome}</strong> &nbsp;|&nbsp;
+    R = ${fmtv(Math.sqrt(Math.max(0,res.r2)),4)} &nbsp;|&nbsp; R² = ${fmtv(res.r2,4)} &nbsp;|&nbsp;
+    Adj. R² = ${fmtv(res.r2adj,4)} &nbsp;|&nbsp; F(${res.df_mod},${res.df}) = ${fStr}, p ${fpStr} &nbsp;|&nbsp; n = ${res.n}
+  </div>`;
+  let rows='';
+  res.names.forEach((nm,i)=>{
+    const star=pStar(res.p[i]);
+    const beta=(resZ&&i>0)?fmtv(resZ.coef[i],4):(i===0?'—':'N/A');
+    rows+=`<tr>
+      <td>${nm}</td>
+      <td>${fmtv(res.coef[i])}</td>
+      <td>${fmtv(res.se[i])}</td>
+      <td>${fmtv(res.t[i])}</td>
+      <td>${fmtp(res.p[i])}</td>
+      <td>${fmtv(res.cilo[i])}</td>
+      <td>${fmtv(res.cihi[i])}</td>
+      <td class="sig-star">${star}</td>
+      <td class="col-divider td-std">${beta}</td>
+    </tr>`;
+  });
+  return `<div class="res-table-wrap">${hdr}
+    <table class="res-table">
+      <thead>
+        <tr>
+          <th rowspan="2">Predictor</th>
+          <th colspan="7" class="th-group">Unstandardized</th>
+          <th colspan="1" class="th-group col-divider" style="color:var(--violet);background:rgba(109,40,217,.07);border-color:var(--violet)">Standardized</th>
+        </tr>
+        <tr>
+          <th>b</th><th>SE</th><th>t</th><th>p</th>
+          <th>LLCI (${pct}%)</th><th>ULCI (${pct}%)</th><th></th>
+          <th class="col-divider" style="color:var(--violet)">β</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="font-size:.7rem;color:var(--text-4);margin-top:6px">
+      * p &lt; .05 &nbsp; ** p &lt; .01 &nbsp; *** p &lt; .001 &nbsp;|&nbsp; LLCI/ULCI = ${confLabel} CI &nbsp;|&nbsp;
+      <span style="color:var(--violet);font-weight:700">β = standardized coefficient</span> (z-scored variables)
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  SIMPLE SLOPES PLOT ENGINE
+//  Legend labels for Low/Mean/High now EMBED the b and p
+//  value directly. A toggle lets users show/hide these
+//  embedded annotations.
+// ══════════════════════════════════════════════════════
+let _slopesData = null;
+let _slopesShowAnnot = true; // whether to show b/p in legend labels
+
+const SLOPE_COLORS = ['#e05252','#3d5af1','#0ca678'];
+const SLOPE_DASHES = [[6,3],[],[3,3]];
+const SLOPE_LABELS_BASE = ['Low (−1SD)','Mean','High (+1SD)'];
+
+function drawSlopes(canvas, data, showAnnot){
+  if(!data)return;
+  const {xn,wn,yn,b_intercept,b_x,b_xw,mX,mW,sW,sdX,wLevelVals,slopes,slopeSEs,slopePvals} = data;
+  const W=canvas.width, H=canvas.height;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  // ── Background ──
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#f8faff');bg.addColorStop(1,'#eef1fb');
+  ctx.fillStyle=bg;roundRect(ctx,0,0,W,H,18);ctx.fill();
+
+  // Subtle dot grid
+  ctx.fillStyle='rgba(61,90,241,.05)';
+  for(let gx=52;gx<W-20;gx+=30)for(let gy=40;gy<H-28;gy+=30){ctx.beginPath();ctx.arc(gx,gy,1.4,0,Math.PI*2);ctx.fill();}
+
+  const pad={top:60,right:56,bottom:72,left:78};
+  const pw=W-pad.left-pad.right, ph=H-pad.top-pad.bottom;
+  const xLo=-2.2*sdX, xHi=2.2*sdX;
+  const nPts=90;
+
+  // Compute Y range
+  let allY=[];
+  wLevelVals.forEach((wc)=>{
+    for(let i=0;i<=nPts;i++){
+      const xc=xLo+(xHi-xLo)*i/nPts;
+      allY.push(b_intercept+b_x*xc+b_xw*xc*wc);
+    }
+  });
+  const yMin=Math.min(...allY),yMax=Math.max(...allY);
+  const yPad=(yMax-yMin)*.14||1;
+  const yLo=yMin-yPad, yHi=yMax+yPad;
+
+  function cx(xc){return pad.left+(xc-xLo)/(xHi-xLo)*pw}
+  function cy(y){return pad.top+ph-(y-yLo)/(yHi-yLo)*ph}
+
+  // ── Grid lines Y ──
+  const nGY=5;
+  for(let i=0;i<=nGY;i++){
+    const yv=yLo+(yHi-yLo)*i/nGY, cyv=cy(yv);
+    ctx.beginPath();ctx.moveTo(pad.left,cyv);ctx.lineTo(pad.left+pw,cyv);
+    ctx.strokeStyle='rgba(180,196,220,.4)';ctx.lineWidth=1;ctx.setLineDash([5,5]);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#6878a8';ctx.font=`500 ${Math.round(W/58)}px Sora,sans-serif`;ctx.textAlign='right';
+    ctx.fillText(yv.toFixed(2),pad.left-9,cyv+4);
+  }
+  // ── Grid lines X ──
+  const nGX=4;
+  for(let i=0;i<=nGX;i++){
+    const xc=xLo+(xHi-xLo)*i/nGX, cxv=cx(xc);
+    ctx.beginPath();ctx.moveTo(cxv,pad.top);ctx.lineTo(cxv,pad.top+ph);
+    ctx.strokeStyle='rgba(180,196,220,.25)';ctx.lineWidth=1;ctx.setLineDash([5,5]);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#6878a8';ctx.font=`500 ${Math.round(W/58)}px Sora,sans-serif`;ctx.textAlign='center';
+    ctx.fillText((xc+mX).toFixed(2),cxv,pad.top+ph+20);
+  }
+  // Zero line
+  const y0=cy(0);
+  if(y0>pad.top&&y0<pad.top+ph){
+    ctx.beginPath();ctx.moveTo(pad.left,y0);ctx.lineTo(pad.left+pw,y0);
+    ctx.strokeStyle='rgba(61,90,241,.20)';ctx.lineWidth=1.5;ctx.setLineDash([3,5]);ctx.stroke();ctx.setLineDash([]);
+  }
+  // ── Axes ──
+  ctx.beginPath();ctx.moveTo(pad.left,pad.top);ctx.lineTo(pad.left,pad.top+ph);ctx.lineTo(pad.left+pw,pad.top+ph);
+  ctx.strokeStyle='#b8c4dc';ctx.lineWidth=2;ctx.stroke();
+
+  // ── Draw lines + confidence bands ──
+  const allPts=[];
+  wLevelVals.forEach((wc,wi)=>{
+    const pts=[];
+    for(let i=0;i<=nPts;i++){
+      const xc=xLo+(xHi-xLo)*i/nPts;
+      pts.push({x:cx(xc),y:cy(b_intercept+b_x*xc+b_xw*xc*wc)});
+    }
+    allPts.push(pts);
+
+    // Confidence band
+    const seSl=slopeSEs[wi];
+    const sePixH=ph*(seSl/(yHi-yLo))*40;
+    ctx.beginPath();
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y-sePixH):ctx.lineTo(p.x,p.y-sePixH));
+    [...pts].reverse().forEach(p=>ctx.lineTo(p.x,p.y+sePixH));
+    ctx.closePath();ctx.fillStyle=SLOPE_COLORS[wi]+'20';ctx.fill();
+
+    // Main line
+    ctx.beginPath();
+    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle=SLOPE_COLORS[wi];ctx.lineWidth=2.8;ctx.lineJoin='round';
+    ctx.setLineDash(SLOPE_DASHES[wi]);ctx.stroke();ctx.setLineDash([]);
+
+    // End-point circle
+    const ep=pts[pts.length-1];
+    ctx.beginPath();ctx.arc(ep.x,ep.y,5.5,0,Math.PI*2);
+    ctx.fillStyle=SLOPE_COLORS[wi];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+  });
+
+  // ── LEGEND with embedded b/p in each label ──
+  // Build legend lines per entry
+  const lfs=Math.round(W/60);
+  const lh=lfs*1.55;
+  const legPadX=14, legPadY=12;
+
+  // Compute legend entry lines
+  const legEntries=SLOPE_LABELS_BASE.map((lbl,i)=>{
+    const slope=slopes[i], pval=slopePvals[i];
+    const star=pStar(pval);
+    if(showAnnot){
+      const pStr=pval<.001?'< .001':pval.toFixed(3);
+      return [`${wn} = ${lbl}`, `b = ${slope.toFixed(3)}${star},  p ${pStr}`];
+    } else {
+      return [`${wn} = ${lbl}`];
+    }
+  });
+
+  // Measure legend width
+  ctx.font=`600 ${lfs}px Sora,sans-serif`;
+  let maxLegW=0;
+  legEntries.forEach(lines=>lines.forEach(line=>{
+    const m=ctx.measureText(line).width;
+    if(m>maxLegW)maxLegW=m;
+  }));
+  const legLineStroke=28;
+  const legW=legLineStroke+10+maxLegW+legPadX*2;
+  const rowsPerEntry=legEntries[0].length;
+  const legItemH=rowsPerEntry*lh+10;
+  const legH=legEntries.length*legItemH+legPadY*2;
+  const legX=pad.left+pw-4-legW;
+  const legY=pad.top+8;
+
+  ctx.save();ctx.shadowColor='rgba(61,90,241,.12)';ctx.shadowBlur=14;
+  ctx.fillStyle='rgba(255,255,255,.95)';ctx.strokeStyle='rgba(180,196,220,.7)';ctx.lineWidth=1;
+  roundRect(ctx,legX,legY,legW,legH,10);ctx.fill();ctx.stroke();ctx.restore();
+
+  legEntries.forEach((lines,i)=>{
+    const col=SLOPE_COLORS[i];
+    const entryY=legY+legPadY+legItemH*i;
+    const midY=entryY+legItemH/2;
+
+    // Colour line stroke
+    ctx.beginPath();ctx.moveTo(legX+legPadX,midY);ctx.lineTo(legX+legPadX+legLineStroke,midY);
+    ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.setLineDash(SLOPE_DASHES[i]);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(legX+legPadX+legLineStroke/2,midY,3.5,0,Math.PI*2);
+    ctx.fillStyle=col;ctx.fill();
+
+    // Text lines
+    lines.forEach((line,j)=>{
+      const isFirstLine=j===0;
+      ctx.fillStyle=isFirstLine?'#1e2745':'#6878a8';
+      ctx.font=`${isFirstLine?'700':'500'} ${lfs}px Sora,sans-serif`;
+      ctx.textAlign='left';
+      const textY=entryY+legPadY/2+(j+1)*lh;
+      ctx.fillText(line,legX+legPadX+legLineStroke+10,textY);
+    });
+  });
+
+  // ── Axis labels ──
+  const afs=Math.round(W/46);
+  ctx.fillStyle='#1e2745';ctx.font=`700 ${afs}px Sora,sans-serif`;ctx.textAlign='center';
+  ctx.fillText(xn,pad.left+pw/2,H-10);
+  ctx.save();ctx.translate(16,pad.top+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText(yn,0,0);ctx.restore();
+
+  // ── Title ──
+  ctx.fillStyle='#080d1f';ctx.font=`800 ${Math.round(W/40)}px Sora,sans-serif`;ctx.textAlign='center';
+  ctx.fillText(`Simple Slopes: ${xn} → ${yn} by ${wn}`,W/2,30);
+
+  // Brand
+  ctx.fillStyle='rgba(61,90,241,.32)';ctx.font=`500 ${Math.round(W/70)}px Sora,sans-serif`;ctx.textAlign='right';
+  ctx.fillText('MedModr v1.0',W-8,H-6);
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
+
+function buildSlopesHTML(data,xn,wn,yn){
+  _slopesData={...data,xn,wn,yn};
+  const uid='slc_'+Date.now();
+  const titleStr=`Simple Slopes: ${xn} → ${yn} at Three Levels of ${wn}`;
+  document.getElementById('slopesModalTitle').textContent=titleStr;
+  const html=`
+  <div class="slopes-wrap">
+    <div class="slopes-toolbar">
+      <div class="slopes-toolbar-title"><i class="fas fa-chart-line"></i>${titleStr}</div>
+      <button class="slopes-toggle-btn active" id="inlineAnnotBtn" onclick="toggleSlopesAnnot()"><i class="fas fa-tag"></i> <span id="inlineAnnotLabel">Hide Labels</span></button>
+    </div>
+    <div class="slopes-canvas-wrap"><canvas id="${uid}" width="700" height="430"></canvas></div>
+    <div class="slopes-btn-row">
+      <button class="slopes-expand-btn" onclick="openSlopesModal()"><i class="fas fa-expand"></i> Full Screen</button>
+      <button class="slopes-dl-btn" onclick="dlSlopesInline('${uid}')"><i class="fas fa-download"></i> Download PNG</button>
+    </div>
+  </div>`;
+  requestAnimationFrame(()=>{
+    const c=document.getElementById(uid);
+    if(c){drawSlopes(c,_slopesData,_slopesShowAnnot);}
+    const mc=document.getElementById('slopesModalCanvas');
+    if(mc){drawSlopes(mc,_slopesData,_slopesShowAnnot);}
+  });
+  return html;
+}
+
+function redrawAllSlopes(){
+  document.querySelectorAll('canvas[id^="slc_"]').forEach(c=>drawSlopes(c,_slopesData,_slopesShowAnnot));
+  const mc=document.getElementById('slopesModalCanvas');
+  if(mc)drawSlopes(mc,_slopesData,_slopesShowAnnot);
+}
+
+window.toggleSlopesAnnot=function(){
+  _slopesShowAnnot=!_slopesShowAnnot;
+  // Inline button
+  const ib=document.getElementById('inlineAnnotBtn');
+  const il=document.getElementById('inlineAnnotLabel');
+  if(ib){ib.classList.toggle('active',_slopesShowAnnot);}
+  if(il){il.textContent=_slopesShowAnnot?'Hide Labels':'Show Labels';}
+  // Modal button
+  const ml=document.getElementById('modalAnnotLabel');
+  const mb=document.getElementById('modalAnnotBtn');
+  if(ml){ml.textContent=_slopesShowAnnot?'Hide Labels':'Show Labels';}
+  if(mb){mb.classList.toggle('active',_slopesShowAnnot);}
+  redrawAllSlopes();
+};
+window.openSlopesModal=function(){
+  drawSlopes(document.getElementById('slopesModalCanvas'),_slopesData,_slopesShowAnnot);
+  document.getElementById('slopesModal').classList.add('open');
+};
+window.closeSlopesModal=function(){document.getElementById('slopesModal').classList.remove('open');};
+window.dlSlopesInline=function(uid){
+  const hi=document.createElement('canvas');hi.width=1800;hi.height=1080;
+  drawSlopes(hi,_slopesData,_slopesShowAnnot);
+  const a=document.createElement('a');a.href=hi.toDataURL('image/png',1);
+  a.download=`MedModr-SimpleSlopes-${new Date().toISOString().slice(0,10)}.png`;a.click();
+};
+window.downloadSlopesHiRes=function(){
+  const hi=document.createElement('canvas');hi.width=1800;hi.height=1080;
+  drawSlopes(hi,_slopesData,_slopesShowAnnot);
+  const a=document.createElement('a');a.href=hi.toDataURL('image/png',1);
+  a.download=`MedModr-SimpleSlopes-HiRes-${new Date().toISOString().slice(0,10)}.png`;a.click();
+};
+
+// ══════════════════════════════════════════════════════
+//  CITATION COPY
+// ══════════════════════════════════════════════════════
+window.copyCitation=function(){
+  const yr=new Date().getFullYear();
+  const citation=`Ibrahim, M. M. (${yr}). MedModr: A browser-based mediation and moderation analysis suite (Version 1.0) [Software]. Available from https://medmodr.vercel.app`;
+  navigator.clipboard.writeText(citation).then(()=>{
+    const btn=document.getElementById('citCopyBtn');
+    if(btn){const old=btn.innerHTML;btn.innerHTML='<i class="fas fa-check"></i> Copied!';btn.style.background='#047857';setTimeout(()=>{btn.innerHTML=old;btn.style.background='';},2200);}
+  }).catch(()=>{
+    // Fallback
+    const ta=document.createElement('textarea');ta.value=citation;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    const btn=document.getElementById('citCopyBtn');
+    if(btn){const old=btn.innerHTML;btn.innerHTML='<i class="fas fa-check"></i> Copied!';btn.style.background='#047857';setTimeout(()=>{btn.innerHTML=old;btn.style.background='';},2200);}
+  });
+};
+
+// ══════════════════════════════════════════════════════
+//  DIAGRAM ENGINE
+// ══════════════════════════════════════════════════════
+let _diagData=null,_diagMode='unstd',_diagShowP=true;
+
+function setCoefMode(m){_diagMode=m;document.getElementById('btnUnstd').classList.toggle('active',m==='unstd');document.getElementById('btnStd').classList.toggle('active',m==='std');renderModalDiag();}
+function toggleDiagPval(){_diagShowP=!_diagShowP;const btn=document.getElementById('btnPval');btn.classList.toggle('active',_diagShowP);btn.innerHTML=`<i class="fas fa-star-of-david"></i> ${_diagShowP?'Hide p-values':'Show p-values'}`;renderModalDiag();}
+function openDiagramModal(data){_diagData=data;_diagMode='unstd';_diagShowP=true;document.getElementById('btnUnstd').classList.add('active');document.getElementById('btnStd').classList.remove('active');document.getElementById('btnPval').classList.add('active');document.getElementById('btnPval').innerHTML='<i class="fas fa-star-of-david"></i> Hide p-values';renderModalDiag();document.getElementById('diagramModal').classList.add('open');}
+function closeDiagramModal(){document.getElementById('diagramModal').classList.remove('open');}
+function renderModalDiag(){if(!_diagData)return;document.getElementById('modalDiagramContainer').innerHTML=buildDiagSVG(_diagData,_diagMode,_diagShowP,true);}
+
+function escX(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function coefLines(b,bs,p,mode,showP){
+  const val=mode==='std'?fmtv(bs,3):fmtv(b,3);
+  const star=pStar(p);
+  const l1=(mode==='std'?`β = ${val}`:`b = ${val}`)+(star?` ${star}`:'');
+  return showP?[l1,`p ${fmtp(p)}`]:[l1];
+}
+function svgBox(cx,cy,lines,color='#3d5af1'){
+  const fs=12.5,lh=17,pad=7;
+  const mw=Math.max(...lines.map(l=>l.length))*7.2+pad*2,h=lines.length*lh+pad;
+  const x=cx-mw/2,y=cy-h/2;
+  const texts=lines.map((l,i)=>`<text x="${cx}" y="${y+pad+fs+i*lh}" text-anchor="middle" font-size="${fs}" font-weight="600" fill="${color}" font-family="Sora,sans-serif">${escX(l)}</text>`).join('');
+  return `<rect x="${x}" y="${y}" width="${mw}" height="${h}" rx="5" fill="white" fill-opacity=".93" stroke="${color}" stroke-width="1" stroke-opacity=".3"/>${texts}`;
+}
+function svgNode(x,y,w,h,lbl,col='#3d5af1',bg='#eef2ff'){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="11" fill="${bg}" stroke="${col}" stroke-width="2.2"/><text x="${x+w/2}" y="${y+h/2+5}" text-anchor="middle" font-size="15" font-weight="700" fill="#080d1f" font-family="Sora,sans-serif">${escX(lbl)}</text>`;}
+function svgDefs(){return `<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3d5af1"/></marker><marker id="arr_teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0891b2"/></marker><marker id="arr_gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8090b0"/></marker><marker id="arr_violet" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6d28d9"/></marker></defs>`;}
+
+function buildSimpleMedSVG(d,mode,showP,W,H){
+  const {xn,mn,yn,a,a_std,pa,b,b_std,pb,cp,cp_std,pcp,indirect}=d,bw=130,bh=52;
+  const xB={x:30,y:H/2-bh/2},mB={x:W/2-bw/2,y:30},yB={x:W-bw-30,y:H/2-bh/2};
+  const aL=coefLines(a,a_std,pa,mode,showP),bL=coefLines(b,b_std,pb,mode,showP),cpL=coefLines(cp,cp_std,pcp,mode,showP);
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">${svgDefs()}
+  ${svgNode(xB.x,xB.y,bw,bh,xn)}${svgNode(mB.x,mB.y,bw,bh,mn,'#0891b2','#e0f6fb')}${svgNode(yB.x,yB.y,bw,bh,yn)}
+  <line x1="${xB.x+bw}" y1="${xB.y+bh/2}" x2="${mB.x}" y2="${mB.y+bh}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
+  <line x1="${mB.x+bw}" y1="${mB.y+bh}" x2="${yB.x}" y2="${yB.y+bh/2}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
+  <line x1="${xB.x+bw}" y1="${xB.y+bh/2+8}" x2="${yB.x}" y2="${yB.y+bh/2+8}" stroke="#8090b0" stroke-width="1.8" stroke-dasharray="8,4" marker-end="url(#arr_gray)"/>
+  ${svgBox((xB.x+bw+mB.x)/2-30,(xB.y+mB.y+bh)/2,aL,'#3d5af1')}
+  ${svgBox((mB.x+bw+yB.x)/2+30,(mB.y+bh+yB.y)/2,bL,'#3d5af1')}
+  ${svgBox(W/2,H/2+62,[...cpL,"(direct c')"],'#4a5470')}
+  <rect x="${W/2-110}" y="${H-32}" width="220" height="24" rx="5" fill="#e7faf0" fill-opacity=".95" stroke="#047857" stroke-width="1"/>
+  <text x="${W/2}" y="${H-16}" text-anchor="middle" font-size="12.5" fill="#047857" font-weight="700">Indirect (a×b) = ${fmtv(indirect,4)}</text></svg>`;
+}
+function buildSerialMedSVG(d,mode,showP,W,H){
+  const {xn,m1n,m2n,yn,a1,a1_std,pa1,b1,b1_std,pb1,a2,a2_std,pa2,b2,b2_std,pb2,cp,cp_std,pcp}=d;
+  const bw=110,bh=48,xB={x:20,y:H/2-bh/2+10},m1B={x:W/4-bw/2,y:40},m2B={x:3*W/4-bw/2,y:40},yB={x:W-bw-20,y:H/2-bh/2+10};
+  const a1L=coefLines(a1,a1_std,pa1,mode,showP),b1L=coefLines(b1,b1_std,pb1,mode,showP),a2L=coefLines(a2,a2_std,pa2,mode,showP),b2L=coefLines(b2,b2_std,pb2,mode,showP),cpL=coefLines(cp,cp_std,pcp,mode,showP);
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">${svgDefs()}
+  ${svgNode(xB.x,xB.y,bw,bh,xn)}${svgNode(m1B.x,m1B.y,bw,bh,m1n,'#0891b2','#e0f6fb')}${svgNode(m2B.x,m2B.y,bw,bh,m2n,'#0891b2','#e0f6fb')}${svgNode(yB.x,yB.y,bw,bh,yn)}
+  <line x1="${xB.x+bw}" y1="${xB.y+bh/2-5}" x2="${m1B.x}" y2="${m1B.y+bh}" stroke="#3d5af1" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="${m1B.x+bw}" y1="${m1B.y+bh/2}" x2="${m2B.x}" y2="${m2B.y+bh/2}" stroke="#0891b2" stroke-width="2" marker-end="url(#arr_teal)"/>
+  <line x1="${m2B.x+bw}" y1="${m2B.y+bh}" x2="${yB.x}" y2="${yB.y+bh/2-5}" stroke="#3d5af1" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="${xB.x+bw}" y1="${xB.y+bh-8}" x2="${yB.x}" y2="${yB.y+bh-8}" stroke="#8090b0" stroke-width="1.8" stroke-dasharray="8,4" marker-end="url(#arr_gray)"/>
+  <line x1="${xB.x+bw/2}" y1="${xB.y}" x2="${m2B.x+bw/2}" y2="${m2B.y+bh}" stroke="#6d28d9" stroke-width="1.6" stroke-dasharray="5,4" marker-end="url(#arr_violet)"/>
+  ${svgBox((xB.x+bw+m1B.x)/2,xB.y-18,a1L,'#3d5af1')}${svgBox(W/2,m1B.y-20,b1L,'#0891b2')}${svgBox((m2B.x+bw+yB.x)/2,yB.y-18,b2L,'#3d5af1')}${svgBox(W/2,H-16,cpL,'#4a5470')}${svgBox((xB.x+bw/2+m2B.x+bw/2)/2+20,H/2+30,a2L,'#6d28d9')}</svg>`;
+}
+function buildModerationSVG(d,mode,showP,W,H){
+  const {xn,wn,yn,b_x,b_x_std,pb_x,b_xw,b_xw_std,pb_xw}=d,bw=130,bh=52;
+  const xB={x:30,y:H/2-bh/2},wB={x:W/2-bw/2,y:20},yB={x:W-bw-30,y:H/2-bh/2};
+  const xL=coefLines(b_x,b_x_std,pb_x,mode,showP),xwL=coefLines(b_xw,b_xw_std,pb_xw,mode,showP);
+  const iX=W/2,iY=H/2;
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">${svgDefs()}
+  ${svgNode(xB.x,xB.y,bw,bh,xn)}${svgNode(yB.x,yB.y,bw,bh,yn)}${svgNode(wB.x,wB.y,bw,bh,wn,'#6d28d9','#f3eeff')}
+  <line x1="${xB.x+bw}" y1="${xB.y+bh/2}" x2="${yB.x}" y2="${yB.y+bh/2}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
+  <line x1="${wB.x+bw/2}" y1="${wB.y+bh}" x2="${iX}" y2="${iY-14}" stroke="#6d28d9" stroke-width="2" marker-end="url(#arr_violet)"/>
+  <circle cx="${iX}" cy="${iY}" r="13" fill="white" stroke="#6d28d9" stroke-width="2"/>
+  <text x="${iX}" y="${iY+5}" text-anchor="middle" font-size="15" fill="#6d28d9" font-weight="800">×</text>
+  ${svgBox(W/2,H/2-32,xL,'#3d5af1')}${svgBox(W/2+130,H/2+30,xwL,'#6d28d9')}
+  <text x="${W/2}" y="${H-8}" text-anchor="middle" font-size="11" fill="#8090b0">${escX(xn)}×${escX(wn)} moderates X→Y</text></svg>`;
+}
+function buildModMedSVG(d,mode,showP,W,H){
+  const {xn,mn,yn,wn,a1,a1_std,pa1,a3,a3_std,pa3,b,b_std,pb,cp,cp_std,pcp}=d,bw=130,bh=52;
+  const xB={x:30,y:H/2-bh/2},mB={x:W/2-bw/2,y:28},yB={x:W-bw-30,y:H/2-bh/2},wB={x:W/2-bw/2,y:H-bh-20};
+  const a1L=coefLines(a1,a1_std,pa1,mode,showP),bL=coefLines(b,b_std,pb,mode,showP),cpL=coefLines(cp,cp_std,pcp,mode,showP),a3L=coefLines(a3,a3_std,pa3,mode,showP);
+  const ax1=xB.x+bw,ay1=xB.y+bh/2-8,ax2=mB.x,ay2=mB.y+bh;
+  const bx1=mB.x+bw,by1=mB.y+bh,bx2=yB.x,by2=yB.y+bh/2-8;
+  const wTX=(ax1+ax2)/2,wTY=(ay1+ay2)/2;
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">${svgDefs()}
+  ${svgNode(xB.x,xB.y,bw,bh,xn)}${svgNode(mB.x,mB.y,bw,bh,mn,'#0891b2','#e0f6fb')}${svgNode(yB.x,yB.y,bw,bh,yn)}${svgNode(wB.x,wB.y,bw,bh,wn,'#6d28d9','#f3eeff')}
+  <line x1="${ax1}" y1="${ay1}" x2="${ax2+2}" y2="${ay2+3}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
+  <line x1="${bx1}" y1="${by1}" x2="${bx2-2}" y2="${by2+3}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
+  <line x1="${xB.x+bw}" y1="${xB.y+bh/2+10}" x2="${yB.x}" y2="${yB.y+bh/2+10}" stroke="#8090b0" stroke-width="1.8" stroke-dasharray="8,4" marker-end="url(#arr_gray)"/>
+  <line x1="${wB.x+bw/2}" y1="${wB.y}" x2="${wTX-4}" y2="${wTY+4}" stroke="#6d28d9" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arr_violet)"/>
+  ${svgBox((ax1+ax2)/2-80,(ay1+ay2)/2-20,a1L,'#3d5af1')}${svgBox((bx1+bx2)/2+80,(by1+by2)/2-20,bL,'#3d5af1')}${svgBox(W/2,H/2+72,[...cpL,"(direct c')"],'#4a5470')}${svgBox(wTX+120,wTY+30,a3L,'#6d28d9')}</svg>`;
+}
+function buildDiagSVG(d,mode,showP,big){
+  const W=big?860:640,H=big?390:290;
+  if(d.type==='simple')return buildSimpleMedSVG(d,mode,showP,W,H);
+  if(d.type==='serial')return buildSerialMedSVG(d,mode,showP,W,H);
+  if(d.type==='moderation')return buildModerationSVG(d,mode,showP,W,H);
+  if(d.type==='modmed')return buildModMedSVG(d,mode,showP,W,H);
+  return '';
+}
+function diagPreview(data){
+  const svg=buildDiagSVG(data,'unstd',false,false);
+  return `<div class="diagram-preview-wrap">
+    <div style="font-size:.82rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px"><i class="fas fa-project-diagram" style="color:var(--brand);margin-right:6px"></i>Path Diagram Preview</div>
+    ${svg}
+    <button class="diagram-open-btn" onclick='openDiagramModal(${JSON.stringify(data)})'><i class="fas fa-expand"></i> View Full-Screen Diagram</button>
+  </div>`;
+}
+function downloadDiagramPNG(){
+  const svgEl=document.querySelector('#modalDiagramContainer svg');if(!svgEl){alert('No diagram.');return;}
+  const vb=svgEl.viewBox.baseVal,w=1800,h=Math.round(1800*(vb.height/vb.width));
+  const svgData=new XMLSerializer().serializeToString(svgEl),img=new Image();
+  const blob=new Blob([svgData],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob);
+  img.onload=()=>{const cv=document.createElement('canvas');cv.width=w;cv.height=h;const ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);const a=document.createElement('a');a.href=cv.toDataURL('image/png',1);a.download=`MedModr-PathDiagram-${new Date().toISOString().slice(0,10)}.png`;a.click();URL.revokeObjectURL(url);};
+  img.src=url;
+}
+
+// ══════════════════════════════════════════════════════
+//  ANALYSIS FUNCTIONS
+// ══════════════════════════════════════════════════════
+function runSimpleMed(vars,covArrays,covNames,cl,nBoot){
+  const xRaw=vars.x,mRaw=vars.m,yRaw=vars.y,xn=vars.xname,mn=vars.mname,yn=vars.yname;
+  const xc=centre(xRaw),m=[...mRaw],y=[...yRaw],confPct=Math.round(cl*100)+'%';
+  const rM=ols(m,buildMat([xc,...covArrays]),[xn,...covNames],cl);
+  const rY=ols(y,buildMat([xc,m,...covArrays]),[xn,mn,...covNames],cl);
+  const rTot=ols(y,buildMat([xc,...covArrays]),[xn,...covNames],cl);
+  if(!rM||!rY||!rTot)return err('Regression failed — matrix singular.');
+  const xz=zscore(xRaw),mz=zscore(mRaw),yz=zscore(yRaw),cvz=covArrays.map(c=>zscore(c));
+  const rMz=ols(mz,buildMat([xz,...cvz]),[xn,...covNames],cl);
+  const rYz=ols(yz,buildMat([xz,mz,...cvz]),[xn,mn,...covNames],cl);
+  const rTz=ols(yz,buildMat([xz,...cvz]),[xn,...covNames],cl);
+  const a=rM.coef[1],sea=rM.se[1],b=rY.coef[2],seb=rY.se[2],cp=rY.coef[1],ctot=rTot.coef[1];
+  const ind=a*b,se_sob=Math.sqrt(b*b*sea*sea+a*a*seb*seb),z_sob=se_sob>0?ind/se_sob:0;
+  const p_sob=2*(1-normalCDF(Math.abs(z_sob)));
+  const a_s=rMz?rMz.coef[1]:NaN,b_s=rYz?rYz.coef[2]:NaN,cp_s=rYz?rYz.coef[1]:NaN;
+  let bootHtml='',bootRes=null;
+  if(nBoot>0){
+    bootRes=bootCI_simple(xc,m,y,nBoot,cl,covArrays);
+    if(bootRes){const sig=bootRes.lo>0||bootRes.hi<0;bootHtml=bootBlock([{path:`${xn}→${mn}→${yn}`,e:bootRes.effect,se:bootRes.se,lo:bootRes.lo,hi:bootRes.hi,sig}],nBoot);}
+  }
+  const pMed=(bootRes&&(bootRes.lo>0||bootRes.hi<0))||(nBoot===0&&p_sob<.05);
+  const diagData={type:'simple',xn,mn,yn,a,a_std:a_s,pa:rM.p[1],b,b_std:b_s,pb:rY.p[2],cp,cp_std:cp_s,pcp:rY.p[1],indirect:ind};
+  const apa=`The indirect effect of ${xn} on ${yn} through ${mn} was b = ${fmtv(ind)} (SE = ${fmtv(se_sob)}${bootRes?`, ${confPct} CI [${fmtv(bootRes.lo)}, ${fmtv(bootRes.hi)}]`:`, z = ${fmtv(z_sob,3)}, p ${fmtp(p_sob)}`}).${pMed?' The indirect effect was statistically significant, supporting mediation.':' The indirect effect was not statistically significant.'}`;
+  return `${renderDesc([{name:xn,vals:xRaw},{name:mn,vals:mRaw},{name:yn,vals:yRaw}])}
+  <div class="panel" style="margin-bottom:18px">
+    <div class="panel-header"><div class="panel-title"><i class="fas fa-arrow-right"></i> Simple Mediation Results</div></div>
+    <div class="panel-body">
+      ${diagPreview(diagData)}
+      <div class="res-sub-label"><i class="fas fa-1"></i> a-Path: ${xn} → ${mn}</div>${renderReg(rM,rMz,mn,confPct)}
+      <div class="res-sub-label"><i class="fas fa-2"></i> b-Path: ${xn}, ${mn} → ${yn}</div>${renderReg(rY,rYz,yn,confPct)}
+      <div class="res-sub-label"><i class="fas fa-3"></i> Total Effect: ${xn} → ${yn}</div>${renderReg(rTot,rTz,yn,confPct)}
+      <div style="padding:18px;background:var(--surface-2);border-radius:var(--r-lg);border:1px solid var(--border);margin-top:18px">
+        <div style="font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--brand);margin-bottom:14px"><i class="fas fa-share-alt"></i> Effects Summary</div>
+        <div class="res-table-wrap"><table class="res-table">
+          <thead><tr><th>Effect</th><th>b</th><th>SE</th><th>z/t</th><th>p</th><th>LLCI</th><th>ULCI</th></tr></thead>
+          <tbody>
+            <tr><td>Total c (${xn}→${yn})</td><td>${fmtv(ctot)}</td><td>${fmtv(rTot.se[1])}</td><td>${fmtv(rTot.t[1])}</td><td>${fmtp(rTot.p[1])}</td><td>${fmtv(rTot.cilo[1])}</td><td>${fmtv(rTot.cihi[1])}</td></tr>
+            <tr><td>Direct c' (${xn}→${yn}|${mn})</td><td>${fmtv(cp)}</td><td>${fmtv(rY.se[1])}</td><td>${fmtv(rY.t[1])}</td><td>${fmtp(rY.p[1])}</td><td>${fmtv(rY.cilo[1])}</td><td>${fmtv(rY.cihi[1])}</td></tr>
+            <tr class="row-bold"><td>Indirect a×b (${xn}→${mn}→${yn})</td><td>${fmtv(ind)}</td><td>${fmtv(se_sob)} (Sobel)</td><td>${fmtv(z_sob,3)}</td><td>${fmtp(p_sob)}</td><td>${fmtv(ind-1.96*se_sob)}</td><td>${fmtv(ind+1.96*se_sob)}</td></tr>
+          </tbody>
+        </table></div>${bootHtml}
+      </div>
+      <div class="interp-box" style="margin-top:16px"><div class="interp-title"><i class="fas fa-lightbulb"></i> APA-Style Summary</div><div class="interp-text">${apa}</div></div>
+      <div class="export-row" style="margin-top:16px"><button class="exp-btn" onclick="copyResults()"><i class="fas fa-copy"></i> Copy</button><button class="exp-btn" onclick="exportWord()"><i class="fas fa-file-word"></i> Export Word</button></div>
+    </div>
+  </div>`;
+}
+
+function runSerialMed(vars,covArrays,covNames,cl,nBoot){
+  const xRaw=vars.x,m1Raw=vars.m1,m2Raw=vars.m2,yRaw=vars.y,xn=vars.xname,m1n=vars.m1name,m2n=vars.m2name,yn=vars.yname;
+  const xc=centre(xRaw),m1=[...m1Raw],m2=[...m2Raw],y=[...yRaw],confPct=Math.round(cl*100)+'%';
+  const rM1=ols(m1,buildMat([xc,...covArrays]),[xn,...covNames],cl);
+  const rM2=ols(m2,buildMat([xc,m1,...covArrays]),[xn,m1n,...covNames],cl);
+  const rY=ols(y,buildMat([xc,m1,m2,...covArrays]),[xn,m1n,m2n,...covNames],cl);
+  const rTot=ols(y,buildMat([xc,...covArrays]),[xn,...covNames],cl);
+  if(!rM1||!rM2||!rY||!rTot)return err('Regression failed.');
+  const xz=zscore(xRaw),m1z=zscore(m1Raw),m2z=zscore(m2Raw),yz=zscore(yRaw),cvz=covArrays.map(c=>zscore(c));
+  const rM1z=ols(m1z,buildMat([xz,...cvz]),[xn,...covNames],cl);
+  const rM2z=ols(m2z,buildMat([xz,m1z,...cvz]),[xn,m1n,...covNames],cl);
+  const rYz=ols(yz,buildMat([xz,m1z,m2z,...cvz]),[xn,m1n,m2n,...covNames],cl);
+  const rTz=ols(yz,buildMat([xz,...cvz]),[xn,...covNames],cl);
+  const a1=rM1.coef[1],d21=rM2.coef[2],a2=rM2.coef[1],b2=rY.coef[3],b1=rY.coef[2];
+  const i12=a1*d21*b2,i1=a1*b1,i2=a2*b2,iTotal=i12+i1+i2,direct=rY.coef[1];
+  const a1s=rM1z?rM1z.coef[1]:NaN,b1s=rYz?rYz.coef[2]:NaN,a2s=rM2z?rM2z.coef[1]:NaN,b2s=rYz?rYz.coef[3]:NaN,cps=rYz?rYz.coef[1]:NaN;
+  let bootHtml='';
+  if(nBoot>0){
+    const br=bootCI_serial(xc,m1,m2,y,nBoot,cl,covArrays);
+    bootHtml=bootBlock([
+      {path:`${xn}→${m1n}→${m2n}→${yn}`,e:br.xm1m2y.effect,se:br.xm1m2y.se,lo:br.xm1m2y.lo,hi:br.xm1m2y.hi,sig:br.xm1m2y.lo>0||br.xm1m2y.hi<0},
+      {path:`${xn}→${m1n}→${yn}`,e:br.xm1y.effect,se:br.xm1y.se,lo:br.xm1y.lo,hi:br.xm1y.hi,sig:br.xm1y.lo>0||br.xm1y.hi<0},
+      {path:`${xn}→${m2n}→${yn}`,e:br.xm2y.effect,se:br.xm2y.se,lo:br.xm2y.lo,hi:br.xm2y.hi,sig:br.xm2y.lo>0||br.xm2y.hi<0},
+    ],nBoot);
+  }
+  const diagData={type:'serial',xn,m1n,m2n,yn,a1,a1_std:a1s,pa1:rM1.p[1],b1,b1_std:b1s,pb1:rY.p[2],a2,a2_std:a2s,pa2:rM2.p[1],b2,b2_std:b2s,pb2:rY.p[3],cp:direct,cp_std:cps,pcp:rY.p[1]};
+  return `${renderDesc([{name:xn,vals:xRaw},{name:m1n,vals:m1Raw},{name:m2n,vals:m2Raw},{name:yn,vals:yRaw}])}
+  <div class="panel" style="margin-bottom:18px">
+    <div class="panel-header"><div class="panel-title"><i class="fas fa-share-alt"></i> Serial Mediation Results</div></div>
+    <div class="panel-body">
+      ${diagPreview(diagData)}
+      <div class="res-sub-label"><i class="fas fa-1"></i> ${xn} → ${m1n}</div>${renderReg(rM1,rM1z,m1n,confPct)}
+      <div class="res-sub-label"><i class="fas fa-2"></i> ${xn}, ${m1n} → ${m2n}</div>${renderReg(rM2,rM2z,m2n,confPct)}
+      <div class="res-sub-label"><i class="fas fa-3"></i> ${xn}, ${m1n}, ${m2n} → ${yn}</div>${renderReg(rY,rYz,yn,confPct)}
+      <div class="res-sub-label"><i class="fas fa-4"></i> Total Effect ${xn} → ${yn}</div>${renderReg(rTot,rTz,yn,confPct)}
+      <div style="padding:18px;background:var(--surface-2);border-radius:var(--r-lg);border:1px solid var(--border);margin-top:18px">
+        <div style="font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--brand);margin-bottom:14px"><i class="fas fa-list"></i> Indirect Effects (Analytic)</div>
+        <div class="res-table-wrap"><table class="res-table">
+          <thead><tr><th>Path</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr class="row-bold"><td>${xn}→${m1n}→${m2n}→${yn} (a1·d21·b2)</td><td>${fmtv(i12)}</td></tr>
+            <tr><td>${xn}→${m1n}→${yn} (a1·b1)</td><td>${fmtv(i1)}</td></tr>
+            <tr><td>${xn}→${m2n}→${yn} (a2·b2)</td><td>${fmtv(i2)}</td></tr>
+            <tr class="row-bold"><td>Total indirect</td><td>${fmtv(iTotal)}</td></tr>
+            <tr><td>Direct c' (${xn}→${yn})</td><td>${fmtv(direct)}</td></tr>
+            <tr><td>Total c</td><td>${fmtv(rTot.coef[1])}</td></tr>
+          </tbody>
+        </table></div>${bootHtml}
+      </div>
+      <div class="export-row" style="margin-top:16px"><button class="exp-btn" onclick="copyResults()"><i class="fas fa-copy"></i> Copy</button><button class="exp-btn" onclick="exportWord()"><i class="fas fa-file-word"></i> Export Word</button></div>
+    </div>
+  </div>`;
+}
+
+function runModeration(vars,covArrays,covNames,cl){
+  const xRaw=vars.x,wRaw=vars.w,yRaw=vars.y,xn=vars.xname,wn=vars.wname,yn=vars.yname;
+  const xc=centre(xRaw),wc=centre(wRaw),y=[...yRaw],xw=xc.map((v,i)=>v*wc[i]),confPct=Math.round(cl*100)+'%';
+  const intName=`${xn}×${wn}`;
+  const rF=ols(y,buildMat([xc,wc,xw,...covArrays]),[xn,wn,intName,...covNames],cl);
+  if(!rF)return err('Regression failed.');
+  const xz=zscore(xRaw),wz=zscore(wRaw),yz=zscore(yRaw),cvz=covArrays.map(c=>zscore(c));
+  const xwz=xz.map((v,i)=>v*wz[i]);
+  const rFz=ols(yz,buildMat([xz,wz,xwz,...cvz]),[xn,wn,intName,...covNames],cl);
+  const bx=rF.coef[1],bxs=rFz?rFz.coef[1]:NaN,bw=rF.coef[2],bws=rFz?rFz.coef[2]:NaN,bxw=rF.coef[3],bxws=rFz?rFz.coef[3]:NaN;
+  const mX=mean(xRaw),mW=mean(wRaw),sW=sd(wRaw),sdX=sd(xRaw);
+  const tc=tQuantile(rF.df,1-cl);
+  const wLVals=[-sW,0,sW];
+  const slopes=wLVals.map(wv=>bx+bxw*wv);
+  const slopeSEs=wLVals.map(wv=>Math.sqrt(rF.se[1]**2+wv**2*rF.se[3]**2));
+  const slopePvals=slopes.map((sl,i)=>tcdf2(Math.abs(slopeSEs[i]>0?sl/slopeSEs[i]:0),rF.df));
+  const slopeRows=slopes.map((sl,i)=>{
+    const lo=sl-tc*slopeSEs[i],hi=sl+tc*slopeSEs[i],pv=slopePvals[i],ts=slopeSEs[i]>0?sl/slopeSEs[i]:0;
+    const wDesc=[`${wn} = Low (M−1SD, ${fmtv(mW-sW)})`,`${wn} = Mean (${fmtv(mW)})`,`${wn} = High (M+1SD, ${fmtv(mW+sW)})`][i];
+    return `<tr><td>${wDesc}</td><td>${fmtv(sl)}</td><td>${fmtv(slopeSEs[i])}</td><td>${fmtv(ts)}</td><td>${fmtp(pv)}</td><td>${fmtv(lo)}</td><td>${fmtv(hi)}</td><td class="sig-star">${pStar(pv)}</td></tr>`;
+  }).join('');
+  const plotData={b_intercept:rF.coef[0],b_x:bx,b_xw:bxw,mX,mW,sW,sdX,wLevelVals:wLVals,slopes,slopeSEs,slopePvals};
+  const slopesHTML=buildSlopesHTML(plotData,xn,wn,yn);
+  const diagData={type:'moderation',xn,wn,yn,b_x:bx,b_x_std:bxs,pb_x:rF.p[1],b_w:bw,b_w_std:bws,pb_w:rF.p[2],b_xw:bxw,b_xw_std:bxws,pb_xw:rF.p[3]};
+  const iSig=rF.p[3]<.05;
+  const apa=`The interaction ${xn}×${wn} predicting ${yn} was ${iSig?'statistically significant':'not significant'} (b = ${fmtv(bxw)}, SE = ${fmtv(rF.se[3])}, t = ${fmtv(rF.t[3])}, p ${fmtp(rF.p[3])}, ${confPct} CI [${fmtv(rF.cilo[3])}, ${fmtv(rF.cihi[3])}]).`;
+  return `${renderDesc([{name:xn,vals:xRaw},{name:wn,vals:wRaw},{name:yn,vals:yRaw}])}
+  <div class="panel" style="margin-bottom:18px">
+    <div class="panel-header"><div class="panel-title"><i class="fas fa-exchange-alt"></i> Moderation Results</div></div>
+    <div class="panel-body">
+      ${diagPreview(diagData)}
+      <div class="res-sub-label"><i class="fas fa-calculator"></i> Regression: X, W, X×W → ${yn}</div>
+      <div class="alert alert-info" style="margin-bottom:10px"><i class="fas fa-info-circle"></i> <strong>Auto:</strong> ${xn} and ${wn} were mean-centered; X×W was computed automatically.</div>
+      ${renderReg(rF,rFz,yn,confPct)}
+      <div style="padding:18px;background:var(--surface-2);border-radius:var(--r-lg);border:1px solid var(--border);margin-top:18px">
+        <div style="font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--brand);margin-bottom:12px"><i class="fas fa-chart-line"></i> Simple Slopes — ${xn} on ${yn} at Three Levels of ${wn}</div>
+        <div class="res-table-wrap"><table class="res-table">
+          <thead><tr><th>Condition</th><th>Slope (b)</th><th>SE</th><th>t</th><th>p</th><th>LLCI</th><th>ULCI</th><th></th></tr></thead>
+          <tbody>${slopeRows}</tbody>
+        </table></div>
+        ${slopesHTML}
+      </div>
+      <div class="interp-box" style="margin-top:16px"><div class="interp-title"><i class="fas fa-lightbulb"></i> APA-Style Summary</div><div class="interp-text">${apa}${iSig?` The effect of <strong>${xn}</strong> on <strong>${yn}</strong> varies with <strong>${wn}</strong>.`:` No significant moderation.`}</div></div>
+      <div class="export-row" style="margin-top:16px"><button class="exp-btn" onclick="copyResults()"><i class="fas fa-copy"></i> Copy</button><button class="exp-btn" onclick="exportWord()"><i class="fas fa-file-word"></i> Export Word</button></div>
+    </div>
+  </div>`;
+}
+
+function runModMed(vars,covArrays,covNames,cl,nBoot){
+  const xRaw=vars.x,mRaw=vars.m,yRaw=vars.y,wRaw=vars.w,xn=vars.xname,mn=vars.mname,yn=vars.yname,wn=vars.wname;
+  const xc=centre(xRaw),wc=centre(wRaw),xw=xc.map((v,i)=>v*wc[i]),m=[...mRaw],y=[...yRaw],confPct=Math.round(cl*100)+'%';
+  const mX=mean(xRaw),mW=mean(wRaw),sW=sd(wRaw),sdX=sd(xRaw);
+  const rM=ols(m,buildMat([xc,wc,xw,...covArrays]),[xn,wn,`${xn}×${wn}`,...covNames],cl);
+  const rY=ols(y,buildMat([xc,m,...covArrays]),[xn,mn,...covNames],cl);
+  const rTot=ols(y,buildMat([xc,...covArrays]),[xn,...covNames],cl);
+  if(!rM||!rY||!rTot)return err('Regression failed.');
+  const xz=zscore(xRaw),mz=zscore(mRaw),yz=zscore(yRaw),wz=zscore(wRaw),cvz=covArrays.map(c=>zscore(c));
+  const xwz=xz.map((v,i)=>v*wz[i]);
+  const rMz=ols(mz,buildMat([xz,wz,xwz,...cvz]),[xn,wn,`${xn}×${wn}`,...covNames],cl);
+  const rYz=ols(yz,buildMat([xz,mz,...cvz]),[xn,mn,...covNames],cl);
+  const rTz=ols(yz,buildMat([xz,...cvz]),[xn,...covNames],cl);
+  const a1=rM.coef[1],a3=rM.coef[3],bB=rY.coef[2],cp=rY.coef[1];
+  const a1s=rMz?rMz.coef[1]:NaN,a3s=rMz?rMz.coef[3]:NaN,bs=rYz?rYz.coef[2]:NaN,cps=rYz?rYz.coef[1]:NaN;
+  const tc=tQuantile(rM.df,1-cl);
+  const wLVals=[-sW,0,sW];
+  const slopes=wLVals.map(wv=>a1+a3*wv);
+  const slopeSEs=wLVals.map(wv=>Math.sqrt(rM.se[1]**2+wv**2*rM.se[3]**2));
+  const slopePvals=slopes.map((sl,i)=>tcdf2(Math.abs(slopeSEs[i]>0?sl/slopeSEs[i]:0),rM.df));
+  const slopeRows=slopes.map((sl,i)=>{
+    const lo=sl-tc*slopeSEs[i],hi=sl+tc*slopeSEs[i],pv=slopePvals[i],ts=slopeSEs[i]>0?sl/slopeSEs[i]:0;
+    const wDesc=[`Low (M−1SD, W=${fmtv(mW-sW)})`,`Mean (W=${fmtv(mW)})`,`High (M+1SD, W=${fmtv(mW+sW)})`][i];
+    return `<tr><td>${wDesc}</td><td>${fmtv(sl)}</td><td>${fmtv(slopeSEs[i])}</td><td>${fmtv(ts)}</td><td>${fmtp(pv)}</td><td>${fmtv(lo)}</td><td>${fmtv(hi)}</td><td class="sig-star">${pStar(pv)}</td></tr>`;
+  }).join('');
+  const analRows=wLVals.map((wv,i)=>`<tr><td>${['Low (M−1SD)','Mean','High (M+1SD)'][i]}</td><td>${fmtv((a1+a3*wv)*bB)}</td></tr>`).join('');
+  const indexMM=a3*bB;
+  let bootHtml='';
+  if(nBoot>0){
+    const br=bootCI_modmed(xRaw,mRaw,yRaw,wRaw,nBoot,cl,covArrays);
+    bootHtml=`<div style="margin-top:12px;padding:14px 18px;background:var(--emerald-bg);border:1.5px solid var(--emerald-border);border-radius:var(--r-md)">
+      <div style="font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--emerald);margin-bottom:10px"><i class="fas fa-random"></i> Bootstrap (${nBoot.toLocaleString()} samples)</div>
+      <div class="res-table-wrap"><table class="res-table">
+        <thead><tr><th>Level of ${wn}</th><th>Effect</th><th>BootSE</th><th>BootLLCI</th><th>BootULCI</th><th>Sig?</th></tr></thead>
+        <tbody>
+          ${[{l:'Low (M−1SD)',r:br.low},{l:'Mean',r:br.mid},{l:'High (M+1SD)',r:br.high}].map(({l,r})=>`<tr><td>${l}</td><td>${fmtv(r.effect)}</td><td>${fmtv(r.se)}</td><td>${fmtv(r.lo)}</td><td>${fmtv(r.hi)}</td><td>${sigLbl(r.lo,r.hi)}</td></tr>`).join('')}
+          <tr class="row-bold"><td>Index of Moderated Mediation</td><td>${fmtv(br.index.effect)}</td><td>${fmtv(br.index.se)}</td><td>${fmtv(br.index.lo)}</td><td>${fmtv(br.index.hi)}</td><td>${sigLbl(br.index.lo,br.index.hi)}</td></tr>
+        </tbody>
+      </table></div>
+      <div style="font-size:.74rem;color:var(--text-4);margin-top:8px">Moderated mediation is supported when the Index of Moderated Mediation CI excludes zero.</div>
+    </div>`;
+  }
+  const plotData={b_intercept:rM.coef[0],b_x:a1,b_xw:a3,mX,mW,sW,sdX,wLevelVals:wLVals,slopes,slopeSEs,slopePvals};
+  const slopesHTML=buildSlopesHTML(plotData,xn,wn,mn);
+  const diagData={type:'modmed',xn,mn,yn,wn,a1,a1_std:a1s,pa1:rM.p[1],a3,a3_std:a3s,pa3:rM.p[3],b:bB,b_std:bs,pb:rY.p[2],cp,cp_std:cps,pcp:rY.p[1]};
+  const iSig=rM.p[3]<.05;
+  return `${renderDesc([{name:xn,vals:xRaw},{name:mn,vals:mRaw},{name:yn,vals:yRaw},{name:wn,vals:wRaw}])}
+  <div class="panel" style="margin-bottom:18px">
+    <div class="panel-header"><div class="panel-title"><i class="fas fa-project-diagram"></i> Moderated Mediation Results</div></div>
+    <div class="panel-body">
+      ${diagPreview(diagData)}
+      <div class="alert alert-info" style="margin-bottom:12px"><i class="fas fa-info-circle"></i> <strong>Auto:</strong> Mean-centering + X×W computed automatically. b-path model: Y ~ X + M only (PROCESS Model 7).</div>
+      <div class="res-sub-label"><i class="fas fa-1"></i> a-Path Model: ${xn}, ${wn}, ${xn}×${wn} → ${mn}</div>${renderReg(rM,rMz,mn,confPct)}
+      <div class="res-sub-label"><i class="fas fa-2"></i> b-Path / Direct Effect Model: ${xn}, ${mn} → ${yn}</div>${renderReg(rY,rYz,yn,confPct)}
+      <div class="res-sub-label"><i class="fas fa-3"></i> Total Effect: ${xn} → ${yn}</div>${renderReg(rTot,rTz,yn,confPct)}
+      <div style="padding:18px;background:var(--surface-2);border-radius:var(--r-lg);border:1px solid var(--border);margin-top:18px">
+        <div style="font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--brand);margin-bottom:12px"><i class="fas fa-chart-bar"></i> Simple Slopes: ${xn} → ${mn} at Three Levels of ${wn}</div>
+        <div class="res-table-wrap"><table class="res-table">
+          <thead><tr><th>Level of ${wn}</th><th>Slope (b)</th><th>SE</th><th>t</th><th>p</th><th>LLCI</th><th>ULCI</th><th></th></tr></thead>
+          <tbody>${slopeRows}</tbody>
+        </table></div>
+        ${slopesHTML}
+      </div>
+      <div style="padding:18px;background:var(--surface-2);border-radius:var(--r-lg);border:1px solid var(--border);margin-top:18px">
+        <div style="font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:var(--brand);margin-bottom:12px"><i class="fas fa-project-diagram"></i> Conditional Indirect Effects &amp; Index of Moderated Mediation</div>
+        <div class="res-table-wrap"><table class="res-table">
+          <thead><tr><th>Level of ${wn}</th><th>Indirect Effect (a×b)</th></tr></thead>
+          <tbody>${analRows}<tr class="row-bold"><td>Index of Moderated Mediation (a3×b)</td><td>${fmtv(indexMM)}</td></tr></tbody>
+        </table></div>${bootHtml}
+      </div>
+      <div class="interp-box" style="margin-top:16px"><div class="interp-title"><i class="fas fa-lightbulb"></i> Interpretation</div>
+        <div class="interp-text">The moderation of the a-path (${xn}→${mn} by ${wn}) was <strong>${iSig?'statistically significant':'not significant'}</strong> (b = ${fmtv(a3)}, SE = ${fmtv(rM.se[3])}, t = ${fmtv(rM.t[3])}, p ${fmtp(rM.p[3])}). The b-path (${mn}→${yn}) was b = ${fmtv(bB)} (SE = ${fmtv(rY.se[2])}, p ${fmtp(rY.p[2])}). Analytic index of moderated mediation = ${fmtv(indexMM)}.${nBoot>0?' Bootstrap CIs shown above.':''}</div>
+      </div>
+      <div class="export-row" style="margin-top:16px"><button class="exp-btn" onclick="copyResults()"><i class="fas fa-copy"></i> Copy</button><button class="exp-btn" onclick="exportWord()"><i class="fas fa-file-word"></i> Export Word</button></div>
+    </div>
+  </div>`;
+}
+
+// ── HELPERS ──
+function err(msg){return `<div class="alert alert-err"><i class="fas fa-times-circle"></i>${msg}</div>`}
+function sigLbl(lo,hi){return lo>0||hi<0?'<span style="color:var(--emerald);font-weight:800">✓ Yes</span>':'<span style="color:var(--text-4)">✗ No</span>'}
+function bootBlock(paths,nBoot){
+  const rows=paths.map(p=>`<tr${p.bold?' class="row-bold"':''}><td>${p.path}</td><td>${fmtv(p.e)}</td><td>${fmtv(p.se)}</td><td>${fmtv(p.lo)}</td><td>${fmtv(p.hi)}</td><td>${sigLbl(p.lo,p.hi)}</td></tr>`).join('');
+  return `<div style="margin-top:12px;padding:14px 18px;background:var(--emerald-bg);border:1.5px solid var(--emerald-border);border-radius:var(--r-md)">
+    <div style="font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--emerald);margin-bottom:10px"><i class="fas fa-random"></i> Bootstrap CI (${nBoot.toLocaleString()} samples, percentile)</div>
+    <div class="res-table-wrap"><table class="res-table"><thead><tr><th>Path</th><th>Effect</th><th>BootSE</th><th>BootLLCI</th><th>BootULCI</th><th>Sig?</th></tr></thead><tbody>${rows}</tbody></table></div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  UI MANAGEMENT
+// ══════════════════════════════════════════════════════
+const TYPE_CFG={
+  simple:{vars:[{key:'x',label:'X — Independent Variable',ph:'e.g. Stress'},{key:'m',label:'M — Mediator',ph:'e.g. Coping'},{key:'y',label:'Y — Outcome',ph:'e.g. Wellbeing'}]},
+  serial:{vars:[{key:'x',label:'X — Independent Variable',ph:'e.g. Treatment'},{key:'m1',label:'M1 — First Mediator',ph:'e.g. Cognition'},{key:'m2',label:'M2 — Second Mediator',ph:'e.g. Affect'},{key:'y',label:'Y — Outcome',ph:'e.g. Behavior'}]},
+  moderation:{vars:[{key:'x',label:'X — Independent Variable',ph:'e.g. Workload'},{key:'w',label:'W — Moderator',ph:'e.g. Support'},{key:'y',label:'Y — Outcome',ph:'e.g. Burnout'}]},
+  modmed:{vars:[{key:'x',label:'X — Independent Variable',ph:'e.g. Autonomy'},{key:'m',label:'M — Mediator',ph:'e.g. Motivation'},{key:'y',label:'Y — Outcome',ph:'e.g. Performance'},{key:'w',label:'W — Moderator',ph:'e.g. Engagement'}]}
+};
+const TYPE_NOTES={
+  moderation:'<div class="alert alert-info" style="margin-bottom:0;margin-top:14px"><i class="fas fa-magic"></i> <strong>No interaction needed:</strong> Mean-centering and X×W are automatic.</div>',
+  modmed:'<div class="alert alert-info" style="margin-bottom:0;margin-top:14px"><i class="fas fa-magic"></i> <strong>No interaction needed:</strong> All centering and interaction computation is automatic. b-path is Y ~ X + M (PROCESS-consistent).</div>'
+};
+let curType='simple';
+
+function renderVarsPanel(){
+  const cfg=TYPE_CFG[curType],note=TYPE_NOTES[curType]||'';
+  document.getElementById('varsPanel').innerHTML=`<div class="vars-grid">${cfg.vars.map(v=>`<div class="var-card"><span class="var-label">${v.label}</span><input class="var-name-input" data-key="${v.key}_name" placeholder="Variable name (e.g. ${v.ph})" autocomplete="off"><textarea class="var-data-input" data-key="${v.key}" rows="5" placeholder="One value per line:&#10;2.3&#10;4.1&#10;3.8&#10;..."></textarea><div class="var-data-hint"><i class="fas fa-info-circle"></i> One numeric value per line. No header.</div></div>`).join('')}</div>${note}`;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  renderVarsPanel();
+  document.querySelectorAll('.atab').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('.atab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');curType=btn.dataset.type;renderVarsPanel();
+    document.getElementById('resultsPanel').classList.remove('visible');
+    document.getElementById('resultsPanel').innerHTML='';
+    _slopesShowAnnot=true; // reset annotation state on type change
+  }));
+  document.getElementById('runBtn').addEventListener('click',runAnalysis);
+  document.getElementById('clearBtn').addEventListener('click',()=>{
+    document.querySelectorAll('.var-data-input,.var-name-input').forEach(t=>t.value='');
+    document.getElementById('covInput').value='';
+    document.getElementById('resultsPanel').classList.remove('visible');
+    document.getElementById('resultsPanel').innerHTML='';
+  });
+  initTheme();initNav();initHamburger();
+  const yr=new Date().getFullYear();
+  document.getElementById('yr').textContent=yr;
+  document.getElementById('citeyear').textContent=yr;
+  document.getElementById('diagramModal').addEventListener('click',function(e){if(e.target===this)closeDiagramModal();});
+  document.getElementById('slopesModal').addEventListener('click',function(e){if(e.target===this)closeSlopesModal();});
+  setTimeout(()=>{const ls=document.getElementById('loadingScreen');ls.classList.add('out');setTimeout(()=>ls.remove(),500);},900);
+});
+
+function runAnalysis(){
+  const cfg=TYPE_CFG[curType];const vars={};let nObs=null,valid=true,errMsg='';
+  cfg.vars.forEach(v=>{
+    const nameEl=document.querySelector(`.var-name-input[data-key="${v.key}_name"]`);
+    const dataEl=document.querySelector(`.var-data-input[data-key="${v.key}"]`);
+    const uLabel=nameEl&&nameEl.value.trim()?nameEl.value.trim():v.ph.split(' ').slice(-1)[0]||v.key.toUpperCase();
+    vars[v.key+'name']=uLabel;
+    if(!dataEl||!dataEl.value.trim()){errMsg=`Data missing for ${v.label}.`;valid=false;return;}
+    const nums=parseNums(dataEl.value);
+    if(!nums){errMsg=`Non-numeric data in ${v.label}.`;valid=false;return;}
+    if(nObs===null)nObs=nums.length;
+    else if(nums.length!==nObs){errMsg=`All variables must have equal N. ${v.label} has ${nums.length}, expected ${nObs}.`;valid=false;return;}
+    vars[v.key]=nums;
+  });
+  if(!valid){showResult(err(errMsg));return;}
+  if(!nObs||nObs<5){showResult(err('At least 5 observations required.'));return;}
+  let covArrays=[],covNames=[];
+  const covRaw=document.getElementById('covInput').value.trim();
+  if(covRaw){
+    const lines=covRaw.split(/\r?\n/).filter(l=>l.trim());
+    if(lines.length>=2){
+      const hdrs=lines[0].trim().split(/[\s,\t]+/);
+      const rows=lines.slice(1).map(l=>l.trim().split(/[\s,\t]+/).map(v=>parseFloat(v)));
+      if(rows.some(r=>r.length!==hdrs.length||r.some(isNaN))){showResult(err('Covariate data malformed.'));return;}
+      if(rows.length!==nObs){showResult(err(`Covariate rows (${rows.length}) ≠ variable N (${nObs}).`));return;}
+      covNames=hdrs;covArrays=hdrs.map((_,j)=>{const col=rows.map(r=>r[j]);const m=mean(col);return col.map(v=>v-m);});
+    }
+  }
+  const cl=parseFloat(document.getElementById('confLevel').value)||.95;
+  const nBoot=parseInt(document.getElementById('bootSamples').value)||0;
+  // Reset annotation state for fresh analysis
+  _slopesShowAnnot=true;
+  showResult('<div class="alert alert-info"><i class="fas fa-spinner fa-spin"></i> Running analysis…</div>');
+  setTimeout(()=>{
+    try{
+      let html='';
+      if(curType==='simple')html=runSimpleMed(vars,covArrays,covNames,cl,nBoot);
+      else if(curType==='serial')html=runSerialMed(vars,covArrays,covNames,cl,nBoot);
+      else if(curType==='moderation')html=runModeration(vars,covArrays,covNames,cl);
+      else if(curType==='modmed')html=runModMed(vars,covArrays,covNames,cl,nBoot);
+      showResult(html);
+    }catch(e){showResult(err('Error: '+e.message));console.error(e);}
+  },60);
+}
+
+function showResult(html){
+  const p=document.getElementById('resultsPanel');p.innerHTML=html;p.classList.add('visible');
+  setTimeout(()=>p.scrollIntoView({behavior:'smooth',block:'start'}),120);
+}
+
+const NAMES={home:'Home',analysis:'Analysis',docs:'Documentation',developer:'Developer',about:'About'};
+function showSection(id){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('section-'+id).classList.add('active');
+  const nav=document.querySelector(`.nav-item[data-sec="${id}"]`);if(nav)nav.classList.add('active');
+  document.getElementById('topbarSection').textContent=NAMES[id]||id;
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=768)document.getElementById('sidebar').classList.remove('open');
+}
+function initNav(){document.querySelectorAll('.nav-item[data-sec]').forEach(el=>el.addEventListener('click',()=>showSection(el.dataset.sec)));}
+function initHamburger(){
+  const btn=document.getElementById('hamburgerBtn'),sb=document.getElementById('sidebar');
+  btn.addEventListener('click',()=>sb.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!sb.contains(e.target)&&!btn.contains(e.target))sb.classList.remove('open');});
+}
+function initTheme(){
+  const saved=localStorage.getItem('medmodr-theme'),pref=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  setTheme(saved||pref);
+  document.getElementById('themeBtn').addEventListener('click',()=>{setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');});
+}
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);localStorage.setItem('medmodr-theme',t);
+  document.getElementById('themeIcon').className=t==='dark'?'fas fa-sun':'fas fa-moon';
+  document.getElementById('themeLabel').textContent=t==='dark'?'Light':'Dark';
+}
+
+window.copyResults=function(){
+  const text=document.getElementById('resultsPanel')?.innerText||'No results';
+  navigator.clipboard?.writeText(text).then(()=>{
+    const btns=document.querySelectorAll('.exp-btn');
+    if(btns.length){const btn=btns[0],old=btn.innerHTML;btn.innerHTML='<i class="fas fa-check"></i> Copied!';setTimeout(()=>btn.innerHTML=old,2000);}
+  });
+};
+
+// ── WORD EXPORT ──
+window.exportWord=function(){
+  const body=document.getElementById('resultsPanel')?.innerHTML||'';
+  const yr=new Date().getFullYear();
+  const html=`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>MedModr Results</title>
+<style>
+  body{font-family:Calibri,sans-serif;margin:50px;color:#111;font-size:11.5pt;line-height:1.7}
+  h1{font-size:18pt;color:#3d5af1;margin-bottom:4px}
+  .app-meta{font-size:10pt;color:#555;border-bottom:2px solid #3d5af1;padding-bottom:12px;margin-bottom:22px}
+  .app-meta a{color:#3d5af1;text-decoration:none}
+  table{border-collapse:collapse;width:100%;margin:12px 0}
+  th,td{border:1px solid #ccc;padding:7px 12px;font-size:10.5pt}
+  th{background:#eef2ff;font-weight:bold}
+  .footer{margin-top:40px;font-size:9.5pt;color:#888;border-top:1px solid #ddd;padding-top:12px}
+</style>
+</head>
+<body>
+<h1>MedModr — Analysis Results</h1>
+<div class="app-meta">
+  <strong>MedModr: Mediation &amp; Moderation Suite</strong> (Version 1.0)<br>
+  Developer: <strong>Mudasir Mohammed Ibrahim</strong> &nbsp;|&nbsp; Website: <a href="https://mudasiribrahim.vercel.app/">https://mudasiribrahim.vercel.app/</a><br>
+  App Website: <a href="https://medmodr.vercel.app">https://medmodr.vercel.app</a> &nbsp;|&nbsp; Built in Ghana 🇬🇭<br>
+  Generated: ${new Date().toLocaleString()} &nbsp;|&nbsp; All computations performed client-side in the browser.
+</div>
+${body}
+<div class="footer">
+  Ibrahim, M. M. (${yr}). <em>MedModr: A browser-based mediation and moderation analysis suite</em> (Version 1.0) [Software]. Available from https://medmodr.vercel.app
+</div>
+</body>
+</html>`;
+  const blob=new Blob([html],{type:'application/msword'}),a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`MedModr-Results-${new Date().toISOString().slice(0,10)}.doc`;
+  a.click();
+};
+</script>
+</body>
+</html>

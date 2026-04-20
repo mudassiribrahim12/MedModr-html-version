@@ -628,7 +628,7 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
   <button class="dt-btn" id="btnStd" onclick="setCoefMode('std')"><i class="fas fa-percentage"></i> Standardized</button>
   <button class="dt-btn active" id="btnPval" onclick="toggleDiagPval()"><i class="fas fa-star-of-david"></i> Hide p-values</button>
   <button class="dt-btn active" id="toggleIndirectBtn" onclick="toggleIndirectDisplay()"><i class="fas fa-chart-simple"></i> Show 95% CI</button>
-  <button class="dt-btn active" id="toggleLineStyleBtn" onclick="toggleDirectLineStyle()"><i class="fas fa-dashed fa-line"></i> Dotted Direct Effect</button>
+<button class="dt-btn active" id="toggleLineStyleBtn" onclick="toggleDirectLineStyle()"><i class="fas fa-chart-line"></i> Dotted Direct Effect</button>
   <button class="dt-btn" onclick="downloadDiagramPNG()"><i class="fas fa-download"></i> Download PNG</button>
 </div>
     <div id="modalDiagramContainer" style="display:flex;justify-content:center;min-height:300px"></div>
@@ -1958,7 +1958,7 @@ function buildModerationSVG(d, mode, showP, W, H){
   // ALL PATHS use the same line style toggle (dotted or solid)
   const lineStyle = _useDottedDirect ? 'stroke-dasharray="8,4"' : '';
 
-  // Get moderation effect - coefficient always shown, CI toggled via _indirectDisplayMode
+   // Get moderation effect - coefficient always shown, CI toggled via _indirectDisplayMode
   const modVal = mode === 'std' ? fmtv(b_xw_std, 3) : fmtv(b_xw, 3);
   const modPrefix = mode === 'std' ? 'β' : 'b';
   const modStar = pStar(pb_xw);
@@ -1966,14 +1966,11 @@ function buildModerationSVG(d, mode, showP, W, H){
   let modLine1 = `${modPrefix} = ${modVal}${modStar ? ' ' + modStar : ''}`;
   let modLine2 = '';
   
-   // Show or hide 95% CI based on toggle - PRIORITIZE BOOTSTRAP CI IF AVAILABLE
+  // Show 95% CI based on toggle - using correct moderation property names
   if (_indirectDisplayMode === 'ci') {
-    // Check for bootstrap CI first (passed from analysis)
-    if (d.bootCI_a3 && d.bootCI_a3.lo !== undefined && d.bootCI_a3.hi !== undefined && !isNaN(d.bootCI_a3.lo) && !isNaN(d.bootCI_a3.hi)) {
-      modLine2 = `95% CI [${fmtv(d.bootCI_a3.lo, 3)}, ${fmtv(d.bootCI_a3.hi, 3)}]`;
-    } else if (d.ci_lo_a3 !== undefined && d.ci_hi_a3 !== undefined && !isNaN(d.ci_lo_a3) && !isNaN(d.ci_hi_a3)) {
-      // Fall back to standard CI
-      modLine2 = `95% CI [${fmtv(d.ci_lo_a3, 3)}, ${fmtv(d.ci_hi_a3, 3)}]`;
+    // Use ci_lo_xw and ci_hi_xw from moderation diagData
+    if (d.ci_lo_xw !== undefined && d.ci_hi_xw !== undefined && !isNaN(d.ci_lo_xw) && !isNaN(d.ci_hi_xw)) {
+      modLine2 = `95% CI [${fmtv(d.ci_lo_xw, 3)}, ${fmtv(d.ci_hi_xw, 3)}]`;
     } else {
       modLine2 = `95% CI [N/A, N/A]`;
     }

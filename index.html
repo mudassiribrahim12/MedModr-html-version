@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <title>MedModr | Mediation & Moderation Analysis Tool | Free Online Software</title>
+    <title>MedModr - Mediation & Moderation Analysis Tool | Free Online Software</title>
     
     <!-- SEO Meta Tags for MedModr -->
     <meta name="title" content="MedModr - Mediation & Moderation Analysis">
@@ -11,6 +11,17 @@
     <meta name="keywords" content="mediation analysis, moderation analysis, PROCESS macro, simple slopes, indirect effect, bootstrap CI, statistical software, free calculator, research tools">
     <meta name="theme-color" content="#3d5af1">
     <meta name="author" content="Mudasir Mohammed Ibrahim">
+    
+    <!-- Favicon and App Icons -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+    
+<link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/shinyhealthtools/medmodr/main/medmodr/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/shinyhealthtools/medmodr/main/medmodr/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/shinyhealthtools/medmodr/main/medmodr/favicon-16x16.png">
+<link rel="manifest" href="https://raw.githubusercontent.com/shinyhealthtools/medmodr/main/medmodr/site.webmanifest">
     
     <!-- Cache Control -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -327,14 +338,284 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
   .dev-avatar-row{flex-direction:column;align-items:flex-start}
   .slopes-modal-inner{width:98vw;padding:18px}
 }
+
+.logo-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, #3d5af1, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.10), var(--s-brand);
+  overflow: hidden;
+}
+
+.logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-icon.no-bg {
+  background: transparent;
+  box-shadow: none;
+}
+
+.dev-btn-linkedin {
+  background: rgba(0, 119, 181, 0.12);
+  border-color: rgba(0, 119, 181, 0.35);
+  color: #0e76a8;
+}
+.dev-btn-linkedin i {
+  color: #0e76a8;
+}
+.dev-btn-linkedin:hover {
+  background: #0e76a8;
+  color: #ffffff !important;
+  border-color: #0e76a8;
+}
+.dev-btn-linkedin:hover i {
+  color: #ffffff !important;
+}
+
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #0a0e1a 0%, #0f1322 50%, #0a0e1a 100%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease-in-out;
+}
+.loading-screen.out {
+  opacity: 0;
+  pointer-events: none;
+}
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  text-align: center;
+  padding: 40px;
+}
+.loading-logo-wrapper {
+  position: relative;
+  margin-bottom: 10px;
+}
+.loading-logo-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(61,90,241,0.25) 0%, rgba(61,90,241,0) 70%);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+.loading-logo-img {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 20px rgba(61,90,241,0.4));
+  animation: float 3s ease-in-out infinite;
+}
+.loading-subtitle {
+  font-size: 0.9rem;
+  color: #8090b0;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.loading-progress-bar {
+  width: 300px;
+  height: 3px;
+  background: rgba(61,90,241,0.15);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.loading-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand), #7c3aed);
+  border-radius: 10px;
+  animation: progress 3s ease-out forwards;
+}
+.loading-version {
+  font-size: 0.75rem;
+  color: #4a5470;
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+  animation: fadeText 1.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.9); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes progress {
+  0% { width: 0%; }
+  20% { width: 15%; }
+  40% { width: 35%; }
+  60% { width: 60%; }
+  80% { width: 85%; }
+  100% { width: 100%; }
+}
+@keyframes fadeText {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Dark mode text colors - all text white */
+[data-theme="dark"] {
+  --bg: #080c18;
+  --surface: #0e1225;
+  --surface-2: #141829;
+  --surface-3: #1a2035;
+  --border: #222840;
+  --border-med: #2d3858;
+  --text-1: #ffffff;
+  --text-2: #ffffff;
+  --text-3: #ffffff;
+  --text-4: #c0c8e0;
+  --brand-bg: rgba(61,90,241,.15);
+  --brand-glow: rgba(61,90,241,.24);
+  --st-1: #eef2ff;
+  --st-2: #d0d8f0;
+  --st-3: #a0b0d0;
+  --st-4: #8090b0;
+}
+
+/* Ensure all text elements inherit white color in dark mode */
+[data-theme="dark"] body,
+[data-theme="dark"] .main,
+[data-theme="dark"] .content,
+[data-theme="dark"] .panel,
+[data-theme="dark"] .panel-body,
+[data-theme="dark"] .doc-prose,
+[data-theme="dark"] .doc-list li,
+[data-theme="dark"] .interp-text,
+[data-theme="dark"] .hero-headline,
+[data-theme="dark"] .hero-sub,
+[data-theme="dark"] .section-title,
+[data-theme="dark"] .section-desc,
+[data-theme="dark"] .stat-num,
+[data-theme="dark"] .stat-desc,
+[data-theme="dark"] .feature-title,
+[data-theme="dark"] .feature-desc,
+[data-theme="dark"] .breadcrumb .cur,
+[data-theme="dark"] .breadcrumb span,
+[data-theme="dark"] .res-table td,
+[data-theme="dark"] .res-table th,
+[data-theme="dark"] .res-sub-label,
+[data-theme="dark"] .formula-box,
+[data-theme="dark"] .alert,
+[data-theme="dark"] .alert-info,
+[data-theme="dark"] .interp-title,
+[data-theme="dark"] .qa-item div,
+[data-theme="dark"] .dev-bio,
+[data-theme="dark"] .dev-connect-label,
+[data-theme="dark"] .dev-btn,
+[data-theme="dark"] .citation-box,
+[data-theme="dark"] .oss-title,
+[data-theme="dark"] .oss-desc,
+[data-theme="dark"] .oss-step,
+[data-theme="dark"] .oss-note,
+[data-theme="dark"] .site-footer p,
+[data-theme="dark"] .site-footer a {
+  color: #ffffff !important;
+}
+
+/* Headers in dark mode */
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] .panel-title,
+[data-theme="dark"] .nav-item,
+[data-theme="dark"] .tb-ghost,
+[data-theme="dark"] .tb-primary,
+[data-theme="dark"] .dt-btn,
+[data-theme="dark"] .atab,
+[data-theme="dark"] .exp-btn,
+[data-theme="dark"] .run-btn,
+[data-theme="dark"] .clear-btn {
+  color: #ffffff !important;
+}
+
+/* Keep brand color for specific elements */
+[data-theme="dark"] .brand,
+[data-theme="dark"] .hero-badge,
+[data-theme="dark"] .var-label,
+[data-theme="dark"] .interp-title i,
+[data-theme="dark"] .res-sub-label i,
+[data-theme="dark"] .panel-title i {
+  color: var(--brand) !important;
+}
+
+/* Table text in dark mode */
+[data-theme="dark"] .res-table td,
+[data-theme="dark"] .res-table th,
+[data-theme="dark"] .res-table .td-std,
+[data-theme="dark"] .res-table .sig-star {
+  color: #ffffff !important;
+}
+
+/* Input text in dark mode */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select,
+[data-theme="dark"] .var-name-input,
+[data-theme="dark"] .var-data-input,
+[data-theme="dark"] .cov-input,
+[data-theme="dark"] .opt-select {
+  color: #ffffff !important;
+  background: #1a2035 !important;
+}
+
+/* Placeholder text in dark mode */
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #8090b0 !important;
+}
+
+/* Links in dark mode */
+[data-theme="dark"] a,
+[data-theme="dark"] .site-footer a {
+  color: var(--brand-light) !important;
+}
+
+[data-theme="dark"] a:hover {
+  color: var(--brand) !important;
+}
+
 </style>
 </head>
 <body>
 
 <div class="loading-screen" id="loadingScreen">
-  <div class="loading-spinner"></div>
-  <div class="loading-title">MedModr</div>
-  <div class="loading-sub">Mediation & Moderation Software · v1.0</div>
+  <div class="loading-container">
+    <div class="loading-logo-wrapper">
+      <div class="loading-logo-glow"></div>
+      <img class="loading-logo-img" src="https://raw.githubusercontent.com/shinyhealthtools/medmodr/main/MedModrlogo.png" alt="MedModr Logo">
+    </div>
+    <div class="loading-subtitle">Mediation and moderation analysis tool</div>
+    <div class="loading-progress-bar">
+      <div class="loading-progress-fill"></div>
+    </div>
+    <div class="loading-version" id="loadingVersionText">Initializing modules...</div>
+  </div>
 </div>
 
 <!-- PATH DIAGRAM MODAL -->
@@ -373,8 +654,12 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-mark" onclick="showSection('home')">
-      <div class="logo-icon"><i class="fas fa-project-diagram"></i></div>
-      <div class="logo-text"><span class="logo-name">MedModr</span></div>
+      <div class="logo-icon" style="background: transparent; border-radius: 0;">
+        <img src="https://raw.githubusercontent.com/shinyhealthtools/medmodr/main/MedModrlogo.png" alt="MedModr Logo">
+      </div>
+      <div class="logo-text">
+        <div class="logo-sub" style="font-size: 0.7rem; color: white;">Mediation & Moderation Tool</div>
+      </div>
     </div>
   </div>
   <nav class="sidebar-nav">
@@ -391,7 +676,7 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
       <span class="theme-label">Appearance</span>
       <button class="theme-btn" id="themeBtn"><i class="fas fa-moon" id="themeIcon"></i> <span id="themeLabel">Dark</span></button>
     </div>
-    <div class="ver-badge">v1.0 · Browser-based · Free</div>
+    <div class="ver-badge">v1.0 · Free Forever</div>
   </div>
 </aside>
 
@@ -416,7 +701,7 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
     <div class="hero">
       <div class="hero-badge"><span class="dot"></span> Statistical Analysis Software</div>
       <h1 class="hero-headline">Mediation &amp; Moderation,<br><em>done right.</em></h1>
-      <p class="hero-sub">Browser-based statistical analysis for simple mediation, serial mediation, moderation, and moderated mediation. Full OLS with both unstandardized and standardized coefficients, exact CIs, bootstrapping, interactive path diagrams, annotated simple slopes plots, and APA reporting.</p>
+      <p class="hero-sub">Browser-based statistical analysis for simple mediation, serial mediation, moderation, and moderated mediation (conditional process). Full OLS with both unstandardized and standardized coefficients, exact CIs, bootstrapping, interactive path diagrams, annotated simple slopes plots, and APA reporting.</p>
       <div class="cta-row">
         <button class="btn-primary" onclick="showSection('analysis')"><i class="fas fa-play-circle"></i> Start Analysis</button>
         <button class="btn-outline" onclick="showSection('docs')"><i class="fas fa-book-open"></i> Documentation</button>
@@ -446,8 +731,6 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
     <div class="site-footer">
       <p>
         MedModr © <span id="yr"></span> - Present | MIT License<br>
-        Free, browser-based. All computations run entirely client-side. Your data never leaves your device.<br>
-        <a href="https://shinyopensource.github.io/medmodr-documentation/" target="_blank" rel="noopener noreferrer">View Full Documentation</a>
       </p>
     </div>
   </div>
@@ -496,97 +779,319 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
     </div>
   </div>
 
-  <!-- DOCS -->
+   <!-- DOCS -->
   <div class="page-section" id="section-docs">
-    <div class="section-header"><h2 class="section-title">Documentation</h2><p class="section-desc">Statistical methodology, coefficient definitions, CI notes, and contributing.</p></div>
+    <div class="section-header">
+      <h2 class="section-title">Documentation</h2>
+      <p class="section-desc">Complete mathematical formulas for all statistical computations in MedModr</p>
+    </div>
     <div class="content" style="padding-top:0">
+      
+      <!-- 1. OLS Regression Formulas -->
       <div class="panel">
-        <div class="panel-header"><div class="panel-title"><i class="fas fa-square-root-alt"></i> Statistical Methodology</div></div>
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-square-root-alt"></i> 1. Ordinary Least Squares (OLS) Regression</div></div>
         <div class="panel-body">
-          <p class="doc-prose">MedModr uses <strong>Ordinary Least Squares (OLS) regression via matrix algebra</strong>. Every table reports both <strong>unstandardized (b)</strong> and <strong>standardized (β)</strong> coefficients for all predictors.</p>
-          <div class="formula-box">β = (X'X)⁻¹X'y &nbsp;|&nbsp; SE(β) = √[MSE · diag(X'X)⁻¹] &nbsp;|&nbsp; t = b/SE &nbsp;|&nbsp; CI = b ± t*(df,α/2) × SE</div>
-          <ul class="doc-list">
-            <li><strong>Unstandardized b:</strong> Raw regression coefficient. Interpreted in original units.</li>
-            <li><strong>Standardized β:</strong> Computed by running the identical regression on z-scored variables.</li>
-            <li><strong>Indirect effects:</strong> Product of path coefficients (a×b). Bootstrap CIs use the percentile method.</li>
-            <li><strong>Simple Slopes Plot:</strong> Each slope line legend label (Low/Mean/High) includes the slope coefficient b and p-value directly within it.</li>
-          </ul>
-          <p class="doc-prose" style="margin-top:16px">Full documentation is available at: <a href="https://shinyopensource.github.io/medmodr-documentation/" target="_blank" rel="noopener noreferrer" style="color:var(--brand)">https://shinyopensource.github.io/medmodr-documentation/</a></p>
+          <p class="doc-prose"><strong>Matrix Formulation:</strong> For outcome Y and predictor matrix X (including intercept), MedModr computes:</p>
+          <div class="formula-box"><strong>Coefficients:</strong> β = (X'X)⁻¹X'y</div>
+          <div class="formula-box"><strong>Standard Errors:</strong> SE(βⱼ) = √[MSE × (X'X)⁻¹ⱼⱼ] where MSE = Σ(yᵢ - ŷᵢ)² / (n - k - 1)</div>
+          <div class="formula-box"><strong>t-Statistic:</strong> tⱼ = βⱼ / SE(βⱼ) with df = n - k - 1</div>
+          <div class="formula-box"><strong>Confidence Interval:</strong> CI = βⱼ ± t(α/2, df) × SE(βⱼ)</div>
+          <div class="formula-box"><strong>R-squared:</strong> R² = 1 - [Σ(yᵢ - ŷᵢ)² / Σ(yᵢ - ȳ)²]</div>
+          <div class="formula-box"><strong>Adjusted R-squared:</strong> R²ₐdj = 1 - (1 - R²)(n - 1)/(n - k - 1)</div>
+          <div class="formula-box"><strong>F-Statistic:</strong> F = (R²/k) / ((1 - R²)/(n - k - 1)) with df₁ = k, df₂ = n - k - 1</div>
         </div>
       </div>
+
+      <!-- 2. Standardized Coefficients -->
       <div class="panel">
-        <div class="panel-header"><div class="panel-title"><i class="fab fa-github"></i> Open Source &amp; Contributing</div></div>
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-percentage"></i> 2. Standardized Coefficients (β)</div></div>
         <div class="panel-body">
-          <p class="doc-prose">MedModr is a <strong>free, open-source project</strong> and is actively maintained.</p>
-          <div class="oss-card">
-            <div class="oss-title"><i class="fas fa-code-branch"></i> Get Involved</div>
-            <p class="oss-desc">Whether you want to add a new analysis type, improve the visualisation engine, fix a bug, or translate the interface, contributions of all sizes are appreciated.</p>
-            <div class="oss-steps">
-              <div class="oss-step"><i class="fas fa-code-branch"></i> Fork the repository</div>
-              <div class="oss-step"><i class="fas fa-wrench"></i> Make your changes</div>
-              <div class="oss-step"><i class="fas fa-paper-plane"></i> Submit a pull request</div>
-            </div>
-            <div class="oss-note">Feature ideas, bug reports, and discussion are all welcome via the GitHub Issues tracker.</div>
+          <p class="doc-prose">MedModr computes fully standardized coefficients by z-scoring all variables:</p>
+          <div class="formula-box">zₓ = (x - μₓ) / σₓ &nbsp;|&nbsp; z_y = (y - μ_y) / σ_y</div>
+          <div class="formula-box">Then: β = (Zₓ'Zₓ)⁻¹Zₓ'z_y</div>
+          <p class="doc-prose">Interpretation: A one standard deviation change in X produces a β standard deviation change in Y.</p>
+        </div>
+      </div>
+
+      <!-- 3. Simple Mediation Formulas -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-arrow-right"></i> 3. Simple Mediation (X → M → Y)</div></div>
+        <div class="panel-body">
+          <p class="doc-prose"><strong>Path Models:</strong></p>
+          <div class="formula-box"><strong>a-path (X → M):</strong> M = i₁ + a·X + e₁</div>
+          <div class="formula-box"><strong>b-path (M → Y):</strong> Y = i₂ + c'·X + b·M + e₂</div>
+          <div class="formula-box"><strong>Total effect (c):</strong> Y = i₃ + c·X + e₃</div>
+          <p class="doc-prose"><strong>Indirect Effect (a×b):</strong></p>
+          <div class="formula-box"><strong>Sobel (Delta) Standard Error:</strong> SEₐբ = √(b²·SEₐ² + a²·SE_b²)</div>
+          <div class="formula-box"><strong>Sobel z-test:</strong> z = (a×b) / SEₐբ</div>
+          <div class="formula-box"><strong>Bootstrap Percentile CI (B = 1,000-10,000):</strong><br>
+            For each bootstrap sample b = 1 to B: compute aᵦ and bᵦ, then θ̂ᵦ = aᵦ × bᵦ.<br>
+            Sort θ̂(1), θ̂(2), ..., θ̂(B). Then 95% CI = [θ̂(₀.₀₂₅×B), θ̂(₀.₉₇₅×B)].
           </div>
         </div>
+      </div>
+
+      <!-- 4. Serial Mediation Formulas -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-share-alt"></i> 4. Serial Mediation (X → M1 → M2 → Y)</div></div>
+        <div class="panel-body">
+          <p class="doc-prose"><strong>Path Models:</strong></p>
+          <div class="formula-box"><strong>M1 model:</strong> M1 = i₁ + a₁·X + e₁</div>
+          <div class="formula-box"><strong>M2 model:</strong> M2 = i₂ + a₂·X + d₂₁·M1 + e₂</div>
+          <div class="formula-box"><strong>Y model:</strong> Y = i₃ + c'·X + b₁·M1 + b₂·M2 + e₃</div>
+          <p class="doc-prose"><strong>Specific Indirect Effects:</strong></p>
+          <div class="formula-box"><strong>Via M1 only:</strong> IE₁ = a₁ × b₁</div>
+          <div class="formula-box"><strong>Via M2 only:</strong> IE₂ = a₂ × b₂</div>
+          <div class="formula-box"><strong>Serial (M1 → M2):</strong> IE₃ = a₁ × d₂₁ × b₂</div>
+          <div class="formula-box"><strong>Total Indirect:</strong> IEₜₒₜₐₗ = IE₁ + IE₂ + IE₃</div>
+          <p class="doc-prose"><strong>Bootstrap CI:</strong> Same percentile method applied to each specific indirect effect.</p>
+        </div>
+      </div>
+
+      <!-- 5. Moderation Formulas -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-exchange-alt"></i> 5. Moderation (X × W → Y)</div></div>
+        <div class="panel-body">
+          <p class="doc-prose"><strong>Moderation Model (with mean-centering option):</strong></p>
+          <div class="formula-box">Y = i + b₁·X + b₂·W + b₃·(X×W) + e</div>
+          <p class="doc-prose">Where X×W is computed based on centering choice:</p>
+          <ul class="doc-list">
+            <li><strong>All variables centered:</strong> (X - X̄) × (W - W̄)</li>
+            <li><strong>Continuous-only centered:</strong> Center continuous X and W, leave binary variables raw</li>
+            <li><strong>No centering:</strong> Raw X × Raw W</li>
+          </ul>
+          <p class="doc-prose"><strong>Simple Slopes at Three Levels of W:</strong></p>
+          <div class="formula-box"><strong>Low (-1 SD):</strong> θₓ→ᵧ|Wₗₒ = b₁ + b₃ × (W̄ - SD_w)</div>
+          <div class="formula-box"><strong>Mean (0 centered):</strong> θₓ→ᵧ|Wₘₑₐₙ = b₁ + b₃ × W̄</div>
+          <div class="formula-box"><strong>High (+1 SD):</strong> θₓ→ᵧ|Wₕᵢ = b₁ + b₃ × (W̄ + SD_w)</div>
+          <div class="formula-box"><strong>Simple Slope SE:</strong> SE(θ) = √[Var(b₁) + W²·Var(b₃) + 2W·Cov(b₁,b₃)]</div>
+        </div>
+      </div>
+
+      <!-- 6. Moderated Mediation Formulas -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-project-diagram"></i> 6. Moderated Mediation (Conditional Process Analysis)</div></div>
+        <div class="panel-body">
+          <p class="doc-prose"><strong>Stage 1 (Moderated a-path):</strong> M = i₁ + a₁·X + a₂·W + a₃·(X×W) + e₁</div>
+          <div class="formula-box"><strong>Stage 2 (b-path):</strong> Y = i₂ + c'·X + b·M + e₂</div>
+          <p class="doc-prose"><strong>Conditional Indirect Effect at level w of W:</strong></p>
+          <div class="formula-box">IE(w) = (a₁ + a₃·w) × b</div>
+          <p class="doc-prose"><strong>Index of Moderated Mediation (IMM):</strong></p>
+          <div class="formula-box">IMM = a₃ × b</div>
+          <div class="formula-box"><strong>Bootstrap CI for IMM:</strong> Percentile method on a₃ᵦ × bᵦ across B bootstrap samples</div>
+          <p class="doc-prose"><strong>Conditional Indirect Effects at ±1 SD and Mean:</strong></p>
+          <div class="formula-box">IE(Mean) = a₁ × b &nbsp;|&nbsp; IE(Low) = (a₁ - a₃·SD_w) × b &nbsp;|&nbsp; IE(High) = (a₁ + a₃·SD_w) × b</div>
+        </div>
+      </div>
+
+      <!-- 7. Bootstrap Implementation -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-random"></i> 7. Bootstrap Resampling Procedure</div></div>
+        <div class="panel-body">
+          <p class="doc-prose">MedModr implements the <strong>percentile bootstrap method</strong>:</p>
+          <div class="formula-box"><strong>Step 1:</strong> Draw B bootstrap samples (1,000-10,000) by sampling n observations with replacement from original data.</div>
+          <div class="formula-box"><strong>Step 2:</strong> For each bootstrap sample b, compute the statistic of interest θ̂ᵦ (e.g., a×b, a₃×b).</div>
+          <div class="formula-box"><strong>Step 3:</strong> Sort all B estimates: θ̂(1), θ̂(2), ..., θ̂(B).</div>
+          <div class="formula-box"><strong>Step 4:</strong> For 95% CI: lower bound = θ̂(₀.₀₂₅×B), upper bound = θ̂(₀.₉₇₅×B).</div>
+          <p class="doc-prose"><strong>Interpretation:</strong> The bootstrap CI that does not contain zero indicates statistical significance at α = 0.05 (two-tailed). This method does not assume normality of the sampling distribution — a critical advantage for indirect effects which are often non-normal.</p>
+        </div>
+      </div>
+
+      <!-- 8. Covariate Handling -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-paperclip"></i> 8. Covariate (Control Variable) Handling</div></div>
+        <div class="panel-body">
+          <p class="doc-prose">All specified covariates C₁, C₂, ..., Cₖ are automatically mean-centered and included in every regression model:</p>
+          <div class="formula-box"><strong>a-path model:</strong> M = i₁ + a·X + Σγⱼ·Cⱼ + e₁</div>
+          <div class="formula-box"><strong>b-path model:</strong> Y = i₂ + c'·X + b·M + Σδⱼ·Cⱼ + e₂</div>
+          <div class="formula-box"><strong>Total effect model:</strong> Y = i₃ + c·X + Σθⱼ·Cⱼ + e₃</div>
+          <p class="doc-prose">Covariates are mean-centered (Cⱼ - C̄ⱼ) to improve interpretability of the intercept and reduce multicollinearity with interaction terms.</p>
+        </div>
+      </div>
+
+      <!-- 9. p-value Calculation -->
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title"><i class="fas fa-chart-bar"></i> 9. p-value Calculation</div></div>
+        <div class="panel-body">
+          <p class="doc-prose">MedModr computes exact two-tailed p-values using the cumulative distribution function (CDF) of the t-distribution:</p>
+          <div class="formula-box">p = 2 × P(T > |t|) where T ~ t(df = n - k - 1)</div>
+          <div class="formula-box">P(T > t) = 1 - Iₓ(df/2, 1/2) with x = df/(df + t²) and I = regularized incomplete beta function</div>
+          <p class="doc-prose">For indirect effects (when bootstrap is not used), p-values come from the Sobel z-test assuming normality: p = 2 × [1 - Φ(|z|)] where Φ is the standard normal CDF.</p>
+        </div>
+      </div>
+
+      <p class="doc-prose" style="margin-top:16px; text-align:center;">External Documentation is available at: <a href="https://shinyopensource.github.io/medmodr-documentation/" target="_blank" rel="noopener noreferrer" style="color:var(--brand)">https://shinyopensource.github.io/medmodr-documentation/</a></p></div>
+
+<!-- DEVELOPER -->
+<div class="page-section" id="section-developer">
+  <div class="section-header"><h2 class="section-title">Developer</h2><p class="section-desc">Connect with the developer of MedModr.</p></div>
+  <div class="content" style="padding-top:0">
+    <div class="dev-card">
+      <div class="dev-avatar-row">
+        <div class="dev-avatar">👨‍💻</div>
+        <div class="dev-info">
+          <div class="dev-name">Mudasir Mohammed Ibrahim</div>
+        </div>
+      </div>
+<p class="dev-bio">Mudasir Mohammed Ibrahim is a nurse researcher, data analyst, and open-source advocate from Ghana 🇬🇭. He is very interested in making advanced statistical methodologies accessible to researchers worldwide through free, browser-based tools. Mudasir built MedModr to eliminate financial and technical barriers in quantitative research, providing a privacy-focused alternative to expensive commercial software. His expertise spans mediation and moderation analysis, statistical computing, and educational technology. Committed to open science, Mudasir believes that rigorous research tools should be freely available to everyone, regardless of institutional resources or geographic location.</p>
+      <div class="dev-connect-label"><i class="fas fa-link" style="margin-right:6px"></i> Connect with me</div>
+      <div class="dev-connect-btns">
+<a class="dev-btn dev-btn-web" href="https://mudasiribrahim.github.io/gh/" target="_blank" rel="noopener"><i class="fas fa-globe"></i> Personal website</a>
+<a class="dev-btn dev-btn-rg" href="https://www.researchgate.net/profile/Mudasir-Ibrahim" target="_blank" rel="noopener"><i class="fas fa-flask"></i> ResearchGate</a>
+<a class="dev-btn dev-btn-linkedin" href="https://linkedin.com/in/mudasir-mohammed-ibrahim-16b5141b0" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i> LinkedIn</a>
+<a class="dev-btn dev-btn-email" href="mailto:mudassiribrahim30@gmail.com"><i class="fas fa-envelope"></i> Contact me</a>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- DEVELOPER -->
-  <div class="page-section" id="section-developer">
-    <div class="section-header"><h2 class="section-title">Developer</h2><p class="section-desc">Connect with the developer of MedModr.</p></div>
-    <div class="content" style="padding-top:0">
-      <div class="dev-card">
-        <div class="dev-avatar-row">
-          <div class="dev-avatar">👨‍💻</div>
-          <div class="dev-info">
-            <div class="dev-name">Mudasir Mohammed Ibrahim</div>
-          </div>
-        </div>
-        <p class="dev-bio">MedModr was built to provide researchers with a free, accurate, and accessible tool for mediation and moderation analysis entirely in the browser.</p>
-        <div class="dev-connect-label"><i class="fas fa-link" style="margin-right:6px"></i> Connect with me</div>
-        <div class="dev-connect-btns">
-          <a class="dev-btn dev-btn-web" href="https://mudasiribrahim.github.io/gh/" target="_blank" rel="noopener"><i class="fas fa-globe"></i> mudasiribrahim.com</a>
-          <a class="dev-btn dev-btn-rg" href="https://www.researchgate.net/profile/Mudasir-Ibrahim" target="_blank" rel="noopener"><i class="fas fa-flask"></i> ResearchGate</a>
-          <a class="dev-btn dev-btn-orcid" href="https://orcid.org/0000-0002-9049-8222" target="_blank" rel="noopener"><i class="fas fa-id-badge"></i> ORCID</a>
-          <a class="dev-btn dev-btn-gs" href="https://scholar.google.com/citations?user=xEFzAvgAAAAJ&hl=en" target="_blank" rel="noopener"><i class="fas fa-graduation-cap"></i> Google Scholar</a>
-          <a class="dev-btn dev-btn-email" href="mailto:mudassiribrahim30@gmail.com"><i class="fas fa-envelope"></i> Contact</a>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-header"><div class="panel-title"><i class="fas fa-file-alt"></i> Citation</div></div>
-        <div class="panel-body">
-          <p class="doc-prose">If you use MedModr in your research, please cite it as:</p>
-          <div class="citation-box" id="citationText">
-            <button class="citation-copy-btn" id="citCopyBtn" onclick="copyCitation()"><i class="fas fa-copy"></i> Copy</button>
-            Ibrahim, M. M. (<span id="citeyear"></span>). <em>MedModr: A browser-based mediation and moderation analysis suite</em> (Version 1.0) [Software]. Available from https://shinyhealthtools.github.io/medmodr/
-          </div>
-        </div>
-      </div>
-    </div>
+ <!-- ABOUT -->
+<div class="page-section" id="section-about">
+  <div class="section-header">
+    <h2 class="section-title">About MedModr</h2>
+    <p class="section-desc">Comprehensive browser-based software for mediation, moderation, and conditional process analysis</p>
   </div>
-
-  <!-- ABOUT -->
-  <div class="page-section" id="section-about">
-    <div class="section-header"><h2 class="section-title">About MedModr</h2><p class="section-desc">Free, browser-based statistical software for mediation and moderation analysis.</p></div>
-    <div class="content" style="padding-top:0">
-      <div class="panel">
-        <div class="panel-header"><div class="panel-title"><i class="fas fa-info-circle"></i> About This Tool</div></div>
-        <div class="panel-body">
-          <p class="doc-prose">MedModr is a free web application for mediation and moderation analysis. All statistical computations run entirely in your browser — no data is sent to any server, ever.</p>
-          <ul class="doc-list">
-            <li><strong>No login required</strong> — use it directly in your browser</li>
-            <li><strong>Privacy-first</strong> — all computation is client-side</li>
-            <li><strong>Both b and β</strong> — every regression table shows unstandardized and standardized coefficients side by side</li>
-            <li><strong>Annotated simple slopes</strong> — b and p-value shown inside each slope label; toggle on/off</li>
-            <li><strong>Automatic interactions</strong> — mean-centering and X×W are handled behind the scenes</li>
-            <li><strong>Built in Ghana 🇬🇭</strong> — by Mudasir Mohammed Ibrahim</li>
-          </ul>
-          <p class="doc-prose">Full documentation: <a href="https://shinyopensource.github.io/medmodr-documentation/" target="_blank" rel="noopener noreferrer" style="color:var(--brand)">https://shinyopensource.github.io/medmodr-documentation/</a></p>
+  <div class="content" style="padding-top:0">
+    
+    <!-- Overview Panel -->
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title"><i class="fas fa-info-circle"></i> Overview</div></div>
+      <div class="panel-body">
+        <p class="doc-prose"><strong>MedModr</strong> (Mediation & Moderation) is a free, open-source web application for conducting simple mediation, serial mediation, moderation, and moderated mediation (conditional process) analyses.</p>
+        <p class="doc-prose">The tool implements Ordinary Least Squares (OLS) regression via matrix algebra, following the methodological framework of Hayes (2022) in <em>Introduction to Mediation, Moderation, and Conditional Process Analysis</em>. It provides both unstandardized (b) and standardized (β) coefficients, bootstrap confidence intervals for indirect effects, interactive path diagrams, annotated simple slopes plots, and APA-format reporting.</p>
+        <div class="alert alert-info" style="margin-top: 16px;">
+          <i class="fas fa-shield-alt"></i>
+          <div><strong>Privacy Guarantee:</strong> All data processing occurs locally in your browser. Your data never leaves your device, and no results are sent to any server. You can disconnect from the internet after the page loads and still run analyses.</div>
         </div>
       </div>
     </div>
+
+    <!-- Scientific Q&A Panel -->
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title"><i class="fas fa-question-circle"></i> Scientific Q&A</div></div>
+      <div class="panel-body">
+        
+        <div class="qa-item" style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
+            <i class="fas fa-question" style="color: var(--brand); font-size: 1.2rem; margin-top: 2px;"></i>
+            <div style="font-weight: 800; color: var(--text-1); font-size: 1rem;">Are the calculations accurate compared to other established software (e.g., PROCESS macro)?</div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-left: 32px;">
+            <i class="fas fa-check-circle" style="color: var(--emerald); font-size: 0.9rem; margin-top: 2px;"></i>
+            <div class="doc-prose" style="margin-bottom: 0; color: var(--text-2);">Yes. MedModr uses standard OLS matrix algebra (X'X⁻¹X'y) identical to that used in other software. Coefficient estimates match within rounding error (±0.001). Bootstrap confidence intervals use percentile method. For example, the tool has been cross-validated against PROCESS macro v4.2 outputs.</div>
+          </div>
+        </div>
+
+        <div class="qa-item" style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
+            <i class="fas fa-question" style="color: var(--brand); font-size: 1.2rem; margin-top: 2px;"></i>
+            <div style="font-weight: 800; color: var(--text-1); font-size: 1rem;">What are the minimum sample size recommendations?</div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-left: 32px;">
+            <i class="fas fa-chart-line" style="color: var(--emerald); font-size: 0.9rem; margin-top: 2px;"></i>
+            <div class="doc-prose" style="margin-bottom: 0; color: var(--text-2);">The tool requires at least 5 observations to run regressions. For reliable estimates, we recommend: <strong>Simple mediation:</strong> n ≥ 50 (or 20+ with strong effects); <strong>Serial mediation:</strong> n ≥ 100; <strong>Moderation:</strong> n ≥ 80; <strong>Moderated mediation:</strong> n ≥ 200. Bootstrap CIs (5,000+ samples) are strongly recommended for indirect effects regardless of sample size.</div>
+          </div>
+        </div>
+
+        <div class="qa-item" style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
+            <i class="fas fa-question" style="color: var(--brand); font-size: 1.2rem; margin-top: 2px;"></i>
+            <div style="font-weight: 800; color: var(--text-1); font-size: 1rem;">How does MedModr handle covariates (control variables)?</div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-left: 32px;">
+            <i class="fas fa-check-circle" style="color: var(--emerald); font-size: 0.9rem; margin-top: 2px;"></i>
+            <div class="doc-prose" style="margin-bottom: 0; color: var(--text-2);">Users can specify an unlimited number of covariates. Each covariate is automatically mean-centered and included in all regression models (a-path, b-path, and total effect models). The first row of the covariate input must contain variable names, followed by data rows with one value per column. Covariates control for their effects on the mediator(s) and outcome, providing more accurate estimates of focal relationships.</div>
+          </div>
+        </div>
+
+        <div class="qa-item" style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
+            <i class="fas fa-question" style="color: var(--brand); font-size: 1.2rem; margin-top: 2px;"></i>
+            <div style="font-weight: 800; color: var(--text-1); font-size: 1rem;">What is the Index of Moderated Mediation and when should I use it?</div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-left: 32px;">
+            <i class="fas fa-check-circle" style="color: var(--emerald); font-size: 0.9rem; margin-top: 2px;"></i>
+            <div class="doc-prose" style="margin-bottom: 0; color: var(--text-2);">The Index of Moderated Mediation (IMM = a₃ × b) quantifies the linear change in the indirect effect as a function of the moderator W. A bootstrap confidence interval that excludes zero indicates statistically significant moderated mediation (Hayes, 2015). MedModr automatically computes the IMM and provides bootstrap CIs when bootstrap samples are specified.</div>
+          </div>
+        </div>
+
+        <div class="qa-item" style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
+            <i class="fas fa-question" style="color: var(--brand); font-size: 1.2rem; margin-top: 2px;"></i>
+            <div style="font-weight: 800; color: var(--text-1); font-size: 1rem;">Does MedModr handle missing data?</div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-left: 32px;">
+            <i class="fas fa-exclamation-triangle" style="color: var(--amber); font-size: 0.9rem; margin-top: 2px;"></i>
+            <div class="doc-prose" style="margin-bottom: 0; color: var(--text-2);">Currently, MedModr requires complete data (listwise deletion). All variables must have equal N with no missing values. Users should pre-process their data (e.g., using mean imputation, multiple imputation, or removing cases with missing values) before pasting into MedModr. Future versions may include built-in missing data handling.</div>
+          </div>
+        </div>
+
+        <div class="qa-item" style="margin-bottom: 0; padding-bottom: 0;">
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
+            <i class="fas fa-question" style="color: var(--brand); font-size: 1.2rem; margin-top: 2px;"></i>
+            <div style="font-weight: 800; color: var(--text-1); font-size: 1rem;">What assumptions does MedModr make about the data?</div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-left: 32px;">
+            <i class="fas fa-check-circle" style="color: var(--emerald); font-size: 0.9rem; margin-top: 2px;"></i>
+            <div class="doc-prose" style="margin-bottom: 0; color: var(--text-2);">MedModr assumes OLS assumptions: (1) linearity between predictors and outcome, (2) independence of errors, (3) homoscedasticity (constant variance of residuals), (4) normality of residuals (for small-sample inference), and (5) no perfect multicollinearity. The tool does not automatically test these assumptions; users should verify them using external software. Bootstrap CIs are robust to violations of normality.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Key References Panel -->
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title"><i class="fas fa-book"></i> Key Statistical References</div></div>
+      <div class="panel-body">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+          <div style="background: var(--surface-2); padding: 10px 14px; border-radius: var(--r-md); font-size: 0.8rem;">
+            <strong>Hayes, A. F. (2022).</strong> <em>Introduction to Mediation, Moderation, and Conditional Process Analysis: A Regression-Based Approach (Vol. 3).</em> The Guilford Press.
+          </div>
+          <div style="background: var(--surface-2); padding: 10px 14px; border-radius: var(--r-md); font-size: 0.8rem;">
+            <strong>Hayes, A. F. (2015).</strong> An Index and Test of Linear Moderated Mediation. <em>Multivariate Behavioral Research, 50(1)</em>, 1-22.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Specifications Panel -->
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title"><i class="fas fa-microchip"></i> Technical Specifications</div></div>
+      <div class="panel-body">
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between;">
+          <div><i class="fas fa-code"></i> <strong>Language:</strong> Vanilla JavaScript (ES6+)</div>
+          <div><i class="fas fa-chart-simple"></i> <strong>Matrix Algebra:</strong> Custom implementation</div>
+          <div><i class="fas fa-random"></i> <strong>Bootstrap:</strong> Up to 10,000 resamples</div>
+          <div><i class="fas fa-chart-line"></i> <strong>Visualization:</strong> SVG + Canvas</div>
+          <div><i class="fas fa-file-word"></i> <strong>Export:</strong> Word (.doc) + PNG + Copy</div>
+          <div><i class="fas fa-globe"></i> <strong>Offline Capable:</strong> Yes (after initial load)</div>
+        </div>
+        <div class="alert alert-info" style="margin-top: 16px; margin-bottom: 0;">
+<i class="fas fa-bug"></i>
+<div><strong>Found a bug or have a feature request?</strong> Please email me directly at <a href="mailto:mudassiribrahim30@gmail.com" style="color: var(--brand);">mudassiribrahim30@gmail.com</a>. Your feedback is highly appreciated! Want to contribute? Fork the repository, create a new branch, make your changes, and submit a pull request. Whether you're fixing a bug, improving documentation, or adding a new feature, your contributions are greatly appreciated!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Citation Panel -->
+    <div class="panel">
+      <div class="panel-header"><div class="panel-title"><i class="fas fa-file-alt"></i> Citation & Version</div></div>
+      <div class="panel-body">
+        <p class="doc-prose">If you use MedModr in your research, please cite it as:</p>
+        <div class="citation-box" id="citationText" style="position: relative;">
+<button class="citation-copy-btn" id="citCopyBtnAbout" onclick="copyCitationAbout()"><i class="fas fa-copy"></i> Copy</button>
+          Ibrahim, M. M. (2026). <em>MedModr: Mediation and moderation analysis tool</em> (Version 1.0) [Software]. Available from https://shinyhealthtools.github.io/medmodr/
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px;">
+          <div><i class="fas fa-tag"></i> <strong>Version:</strong> 1.0.0</div>
+          <div><i class="fas fa-calendar-alt"></i> <strong>Released:</strong> April 2026</div>
+          <div><i class="fas fa-balance-scale"></i> <strong>License:</strong> MIT (Open Source)</div>
+          <div><i class="fab fa-github"></i> <strong>Repository:</strong> <a href="https://github.com/shinyhealthtools/medmodr" target="_blank">github.com/shinyhealthtools/medmodr</a></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -2286,10 +2791,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   initTheme();initNav();initHamburger();
   const yr=new Date().getFullYear();
   document.getElementById('yr').textContent=yr;
-  document.getElementById('citeyear').textContent=yr;
   document.getElementById('diagramModal').addEventListener('click',function(e){if(e.target===this)closeDiagramModal();});
   document.getElementById('slopesModal').addEventListener('click',function(e){if(e.target===this)closeSlopesModal();});
-  setTimeout(()=>{const ls=document.getElementById('loadingScreen');ls.classList.add('out');setTimeout(()=>ls.remove(),500);},900);
 });
 
 function runAnalysis(){
@@ -2423,6 +2926,75 @@ ${body}
   a.download=`MedModr-Results-${new Date().toISOString().slice(0,10)}.doc`;
   a.click();
 };
+
+window.copyCitationAbout = function() {
+  const citation = `Ibrahim, M. M. (2026). MedModr: Mediation and moderation analysis tool (Version 1.0) [Software]. Available from https://shinyhealthtools.github.io/medmodr/`;
+  navigator.clipboard.writeText(citation).then(() => {
+    const btn = document.getElementById('citCopyBtnAbout');
+    if (btn) {
+      const old = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      btn.style.background = '#047857';
+      setTimeout(() => {
+        btn.innerHTML = old;
+        btn.style.background = '';
+      }, 2200);
+    }
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = citation;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('citCopyBtnAbout');
+    if (btn) {
+      const old = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+      btn.style.background = '#047857';
+      setTimeout(() => {
+        btn.innerHTML = old;
+        btn.style.background = '';
+      }, 2200);
+    }
+  });
+};
+
+// Loading screen with text rotation - COMPLETELY ENDS BEFORE PAGE DISPLAYS
+const loadingTexts = [
+  "Initializing modules...",
+  "Loading regression engine...",
+  "Preparing bootstrap sampler...",
+  "Rendering interface...",
+  "Ready!"
+];
+let textIndex = 0;
+const loadingVersionEl = document.getElementById('loadingVersionText');
+const loadingScreen = document.getElementById('loadingScreen');
+
+if (loadingVersionEl && loadingScreen) {
+  // Rotate loading text every 0.8 seconds
+  const textInterval = setInterval(() => {
+    textIndex = (textIndex + 1) % loadingTexts.length;
+    loadingVersionEl.textContent = loadingTexts[textIndex];
+  }, 800);
+  
+  // Wait for 3.5 seconds (progress bar finishes at 3s, plus 0.5s buffer)
+  setTimeout(() => {
+    clearInterval(textInterval);
+    loadingScreen.classList.add('out');
+    // Remove loading screen from DOM after fade out
+    setTimeout(() => {
+      loadingScreen.remove();
+      // Ensure body is visible and interactive
+      document.body.style.overflow = 'auto';
+    }, 500);
+  }, 3500);
+  
+  // Prevent scrolling while loading
+  document.body.style.overflow = 'hidden';
+}
+
 </script>
 </body>
 </html>

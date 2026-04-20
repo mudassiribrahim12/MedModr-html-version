@@ -1026,7 +1026,7 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
           </div>
         </div>
 
-        <div class="qa-item" style="margin-bottom: 0; padding-bottom: 0;">
+        <div class="qa-item" style="margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 20px;">
           <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
             <i class="fas fa-question" style="color: var(--brand); font-size: 1.2rem; margin-top: 2px;"></i>
             <div style="font-weight: 800; color: var(--text-1); font-size: 1rem;">What assumptions does MedModr make about the data?</div>
@@ -1034,6 +1034,17 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
           <div style="display: flex; align-items: flex-start; gap: 12px; margin-left: 32px;">
             <i class="fas fa-check-circle" style="color: var(--emerald); font-size: 0.9rem; margin-top: 2px;"></i>
             <div class="doc-prose" style="margin-bottom: 0; color: var(--text-2);">MedModr assumes OLS assumptions: (1) linearity between predictors and outcome, (2) independence of errors, (3) homoscedasticity (constant variance of residuals), (4) normality of residuals (for small-sample inference), and (5) no perfect multicollinearity. The tool does not automatically test these assumptions; users should verify them using external software. Bootstrap CIs are robust to violations of normality.</div>
+          </div>
+        </div>
+
+        <div class="qa-item" style="margin-bottom: 0; padding-bottom: 0;">
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px;">
+            <i class="fas fa-question" style="color: var(--brand); font-size: 1.2rem; margin-top: 2px;"></i>
+            <div style="font-weight: 800; color: var(--text-1); font-size: 1rem;">Does MedModr automatically handle categorical variables?</div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; margin-left: 32px;">
+            <i class="fas fa-code-branch" style="color: var(--emerald); font-size: 0.9rem; margin-top: 2px;"></i>
+            <div class="doc-prose" style="margin-bottom: 0; color: var(--text-2);"><strong>Manual dummy coding required.</strong> MedModr does not automatically convert categorical variables (e.g., gender, treatment group, education level) into dummy codes. All categorical predictors  including moderators, and covariates must be converted by the user into numeric 0/1 dummy variables <em>before</em> pasting data into the tool. For a categorical variable with k levels, create k−1 dummy variables. The reference group should be coded as 0 on all dummies. Continuous variables can be used as-is and will be automatically mean-centered when appropriate.</div>
           </div>
         </div>
 
@@ -1741,54 +1752,73 @@ function svgDefs(){
   </defs>`;
 }
 
-// ── SIMPLE MEDIATION DIAGRAM ──
+// ── SIMPLE MEDIATION DIAGRAM ── (All lines properly touch the variable boxes)
 function buildSimpleMedSVG(d, mode, showP, W, H){
   const {xn,mn,yn,a,a_std,pa,b,b_std,pb,cp,cp_std,pcp,indirect,indirect_se,indirect_z,indirect_p} = d;
   const bw=120, bh=50;
-  const xB={x:30, y:H/2-bh/2};
-  const mB={x:W/2-bw/2, y:28};
-  const yB={x:W-bw-30, y:H/2-bh/2};
-
-  const aMidX = (xB.x+bw + mB.x)/2;
-  const aMidY = (xB.y+bh/2 + mB.y+bh)/2;
-  const bMidX = (mB.x+bw + yB.x)/2;
-  const bMidY = (mB.y+bh + yB.y+bh/2)/2;
-  const cpMidX = W/2;
-  const cpMidY = H/2 + 62;
-
+  
+  // Position boxes with proper spacing
+  const xB = {x: 30, y: H/2 - bh/2};           // X box (left)
+  const mB = {x: W/2 - bw/2, y: 28};           // M box (top center)
+  const yB = {x: W - bw - 30, y: H/2 - bh/2};   // Y box (right)
+  
+  // --- a-path: X → M (arrow touches the left edge of M box) ---
+  const aStartX = xB.x + bw;                    // right edge of X
+  const aStartY = xB.y + bh/2;                  // middle of X vertically
+  const aEndX = mB.x;                           // left edge of M (arrow points HERE)
+  const aEndY = mB.y + bh/2;                    // middle of M vertically
+  
+  // --- b-path: M → Y (arrow starts from right edge of M, goes to left edge of Y) ---
+  const bStartX = mB.x + bw;                    // right edge of M
+  const bStartY = mB.y + bh/2;                  // middle of M vertically
+  const bEndX = yB.x;                           // left edge of Y (arrow points HERE)
+  const bEndY = yB.y + bh/2;                    // middle of Y vertically
+  
+  // --- c' direct path: X → Y (arrow touches left edge of Y) ---
+  const cpStartX = xB.x + bw;                   // right edge of X
+  const cpStartY = xB.y + bh/2 + 18;            // slightly below middle of X
+  const cpEndX = yB.x;                          // left edge of Y (arrow points HERE)
+  const cpEndY = yB.y + bh/2 + 18;              // slightly below middle of Y
+  
+  // Label box positions (centered along each path)
+  const aMidX = (aStartX + aEndX) / 2 - 30;
+  const aMidY = (aStartY + aEndY) / 2 - 20;
+  const bMidX = (bStartX + bEndX) / 2 + 30;
+  const bMidY = (bStartY + bEndY) / 2 - 20;
+  const cpMidX = W / 2;
+  const cpMidY = cpStartY + 28;
+  
   const aLines = coefLines(a, a_std, pa, mode, showP);
   const bLines = coefLines(b, b_std, pb, mode, showP);
-  
-  // --- Use the new indirect effect lines based on toggle ---
   const indLines = getIndirectEffectLines(d, mode, showP);
-  
-  // --- Use the global variable for direct effect line style ---
   const directLineStyle = _useDottedDirect ? 'stroke-dasharray="8,4"' : '';
-
-  // ALL PATHS NOW USE THE SAME COLOR (#3d5af1)
+  
   return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">
   ${svgDefs()}
-  ${svgNode(xB.x,xB.y,bw,bh,xn)}
-  ${svgNode(mB.x,mB.y,bw,bh,mn,'#3d5af1','#e0f6fb')}
-  ${svgNode(yB.x,yB.y,bw,bh,yn)}
-  <!-- a-path -->
-  <line x1="${xB.x+bw}" y1="${xB.y+bh/2}" x2="${mB.x}" y2="${mB.y+bh}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
-  <!-- b-path -->
-  <line x1="${mB.x+bw}" y1="${mB.y+bh}" x2="${yB.x}" y2="${yB.y+bh/2}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
-  <!-- Direct effect c'-path - style toggles between dotted and solid -->
-  <line x1="${xB.x+bw}" y1="${xB.y+bh/2+10}" x2="${yB.x}" y2="${yB.y+bh/2+10}" stroke="#3d5af1" stroke-width="1.8" ${directLineStyle} marker-end="url(#arr)"/>
-  ${svgLabelBox(aMidX-20, aMidY-10, aLines, '#3d5af1')}
-  ${svgLabelBox(bMidX+20, bMidY-10, bLines, '#3d5af1')}
+  ${svgNode(xB.x, xB.y, bw, bh, xn)}
+  ${svgNode(mB.x, mB.y, bw, bh, mn, '#3d5af1', '#e0f6fb')}
+  ${svgNode(yB.x, yB.y, bw, bh, yn)}
+  
+  <!-- a-path: X → M (arrow touches left edge of M) -->
+  <line x1="${aStartX}" y1="${aStartY}" x2="${aEndX}" y2="${aEndY}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
+  ${svgLabelBox(aMidX, aMidY, aLines, '#3d5af1')}
+  
+  <!-- b-path: M → Y (arrow starts from right edge of M, touches left edge of Y) -->
+  <line x1="${bStartX}" y1="${bStartY}" x2="${bEndX}" y2="${bEndY}" stroke="#3d5af1" stroke-width="2.2" marker-end="url(#arr)"/>
+  ${svgLabelBox(bMidX, bMidY, bLines, '#3d5af1')}
+  
+  <!-- Direct effect c'-path: X → Y (arrow touches left edge of Y) -->
+  <line x1="${cpStartX}" y1="${cpStartY}" x2="${cpEndX}" y2="${cpEndY}" stroke="#3d5af1" stroke-width="1.8" ${directLineStyle} marker-end="url(#arr)"/>
   ${svgLabelBox(cpMidX, cpMidY, [...coefLines(cp, cp_std, pcp, mode, showP), "(direct c')"], '#3d5af1')}
-  <!-- Increased height to accommodate the new label line -->
+  
+  <!-- Indirect effect box -->
   <rect x="${W/2-160}" y="${H-62}" width="320" height="54" rx="6" fill="#e7faf0" fill-opacity=".97" stroke="#3d5af1" stroke-width="1.5"/>
-  <!-- Added "Simple indirect effect" label as first line -->
   <text x="${W/2}" y="${H-62+14}" text-anchor="middle" font-size="11" fill="#3d5af1" font-weight="700" font-family="Sora,sans-serif">Simple indirect effect:</text>
   ${indLines.map((l,i)=>`<text x="${W/2}" y="${H-62+28+i*14}" text-anchor="middle" font-size="${i===0?11:10.5}" fill="#3d5af1" font-weight="${i===0?'600':'500'}" font-family="Sora,sans-serif">${escX(l)}</text>`).join('')}
   </svg>`;
 }
 
-// ── SERIAL MEDIATION DIAGRAM ── (All lines toggle between dotted/solid, all straight lines, proper label boxes)
+// ── SERIAL MEDIATION DIAGRAM ── (All lines properly touch card edges, no lines extend inside)
 function buildSerialMedSVG(d, mode, showP, W, H){
   const {xn,m1n,m2n,yn,
     a1,a1_std,pa1,
@@ -1799,76 +1829,76 @@ function buildSerialMedSVG(d, mode, showP, W, H){
     cp,cp_std,pcp,
     serial_indirect} = d;
 
-  const bw=110, bh=46;
-  // Reposition nodes for better spacing with straight lines
-  const xB   = {x:20,  y:H/2-bh/2};
-  const m1B  = {x:W/3 - bw/2, y:28};
-  const m2B  = {x:2*W/3 - bw/2, y:28};
-  const yB   = {x:W - bw - 20, y:H/2-bh/2};
-
-  // STRAIGHT LINE COORDINATES - all paths now straight lines
-  // a1: X → M1 (diagonal up)
-  const a1x1 = xB.x + bw;
-  const a1y1 = xB.y + bh/2;
-  const a1x2 = m1B.x;
-  const a1y2 = m1B.y + bh;
+  const bw = 110, bh = 46;
   
-  // d21: M1 → M2 (horizontal)
-  const d21x1 = m1B.x + bw;
-  const d21y1 = m1B.y + bh/2;
-  const d21x2 = m2B.x;
-  const d21y2 = m2B.y + bh/2;
+  // Position nodes for clean straight-line paths
+  const xB   = {x: 20,                y: H/2 - bh/2};        // X (left, middle)
+  const m1B  = {x: W/3 - bw/2,        y: 28};                // M1 (top center-left)
+  const m2B  = {x: 2*W/3 - bw/2,      y: 28};                // M2 (top center-right)
+  const yB   = {x: W - bw - 20,        y: H/2 - bh/2};        // Y (right, middle)
   
-  // b2: M2 → Y (diagonal down)
-  const b2x1 = m2B.x + bw;
-  const b2y1 = m2B.y + bh;
-  const b2x2 = yB.x;
-  const b2y2 = yB.y + bh/2;
+  // ─── a1 PATH: X → M1 (arrow touches left edge of M1 at middle height) ───
+  const a1x1 = xB.x + bw;               // right edge of X
+  const a1y1 = xB.y + bh/2;             // middle of X vertically
+  const a1x2 = m1B.x;                   // left edge of M1 (arrow points HERE)
+  const a1y2 = m1B.y + bh/2;            // middle of M1 vertically
   
-  // c' direct: X → Y (horizontal, slightly lower)
-  const cpx1 = xB.x + bw;
-  const cpy1 = xB.y + bh/2 + 18;
-  const cpx2 = yB.x;
-  const cpy2 = yB.y + bh/2 + 18;
+  // ─── d21 PATH: M1 → M2 (arrow touches left edge of M2 at middle height) ───
+  const d21x1 = m1B.x + bw;             // right edge of M1
+  const d21y1 = m1B.y + bh/2;           // middle of M1 vertically
+  const d21x2 = m2B.x;                  // left edge of M2 (arrow points HERE)
+  const d21y2 = m2B.y + bh/2;           // middle of M2 vertically
   
-  // a2: X → M2 (diagonal up-right)
-  const a2x1 = xB.x + bw/2 + 15;
-  const a2y1 = xB.y + bh;
-  const a2x2 = m2B.x;
-  const a2y2 = m2B.y + bh;
+  // ─── b2 PATH: M2 → Y (arrow touches left edge of Y at middle height) ───
+  const b2x1 = m2B.x + bw;              // right edge of M2
+  const b2y1 = m2B.y + bh/2;            // middle of M2 vertically
+  const b2x2 = yB.x;                    // left edge of Y (arrow points HERE)
+  const b2y2 = yB.y + bh/2;             // middle of Y vertically
   
-  // b1: M1 → Y (diagonal down-right)
-  const b1x1 = m1B.x + bw;
-  const b1y1 = m1B.y + bh;
-  const b1x2 = yB.x;
-  const b1y2 = yB.y + bh/2 - 15;
-
-  // LABEL BOX POSITIONS (attached to each path)
-  const a1Lx = (a1x1 + a1x2)/2 - 35;
-  const a1Ly = (a1y1 + a1y2)/2 - 8;
-  const d21Lx = (d21x1 + d21x2)/2;
-  const d21Ly = d21y1 - 28;
-  const b2Lx = (b2x1 + b2x2)/2 + 25;
-  const b2Ly = (b2y1 + b2y2)/2 - 8;
-  const cpLx = (cpx1 + cpx2)/2;
-  const cpLy = cpy1 + 22;
-  const a2Lx = (a2x1 + a2x2)/2 - 15;
-  const a2Ly = (a2y1 + a2y2)/2 + 5;
-  const b1Lx = (b1x1 + b1x2)/2 + 15;
-  const b1Ly = (b1y1 + b1y2)/2 + 5;
-
-  // Get coefficient lines for each path
+  // ─── c' DIRECT PATH: X → Y (arrow touches left edge of Y, slightly lower) ───
+  const cpx1 = xB.x + bw;               // right edge of X
+  const cpy1 = xB.y + bh/2 + 18;        // slightly below middle of X
+  const cpx2 = yB.x;                    // left edge of Y (arrow points HERE)
+  const cpy2 = yB.y + bh/2 + 18;        // slightly below middle of Y
+  
+  // ─── a2 PATH: X → M2 (starts at RIGHT edge of X, ends at LEFT edge of M2) ───
+  // FIXED: No longer starts inside X card
+  const a2x1 = xB.x + bw;               // RIGHT edge of X (starts at edge, not inside)
+  const a2y1 = xB.y + bh - 8;           // bottom of X (near bottom-right corner)
+  const a2x2 = m2B.x;                   // LEFT edge of M2 (arrow points HERE)
+  const a2y2 = m2B.y + bh - 8;          // bottom of M2
+  
+  // ─── b1 PATH: M1 → Y (starts at RIGHT edge of M1, ends at LEFT edge of Y) ───
+  const b1x1 = m1B.x + bw;              // RIGHT edge of M1
+  const b1y1 = m1B.y + bh - 8;          // bottom of M1
+  const b1x2 = yB.x;                    // LEFT edge of Y (arrow points HERE)
+  const b1y2 = yB.y + bh/2 - 15;        // slightly above middle of Y
+  
+  // ─── LABEL BOX POSITIONS ───
+  const a1Lx  = (a1x1 + a1x2) / 2 - 40;
+  const a1Ly  = (a1y1 + a1y2) / 2 - 20;
+  const d21Lx = (d21x1 + d21x2) / 2;
+  const d21Ly = d21y1 - 30;
+  const b2Lx  = (b2x1 + b2x2) / 2 + 30;
+  const b2Ly  = (b2y1 + b2y2) / 2 - 20;
+  const cpLx  = (cpx1 + cpx2) / 2;
+  const cpLy  = cpy1 + 25;
+  const a2Lx  = (a2x1 + a2x2) / 2 - 20;
+  const a2Ly  = (a2y1 + a2y2) / 2 + 8;
+  const b1Lx  = (b1x1 + b1x2) / 2 + 20;
+  const b1Ly  = (b1y1 + b1y2) / 2 + 8;
+  
+  // ─── COEFFICIENT LINES ───
   const a1Lines  = coefLines(a1,  a1_std,  pa1,  mode, showP);
   const d21Lines = coefLines(d21, d21_std, pd21, mode, showP);
   const b2Lines  = coefLines(b2,  b2_std,  pb2,  mode, showP);
   const cpLines  = [...coefLines(cp, cp_std, pcp, mode, showP), "(direct c')"];
   const a2Lines  = coefLines(a2,  a2_std,  pa2,  mode, showP);
   const b1Lines  = coefLines(b1,  b1_std,  pb1,  mode, showP);
-
-  // Get indirect effect lines with CI/p-value toggle
-  const indVal = mode==='std' ? fmtv(a1_std*d21_std*b2_std, 3) : fmtv(serial_indirect, 4);
-  const indPrefix = mode==='std' ? 'β' : 'b';
   
+  // ─── INDIRECT EFFECT LINES ───
+  const indVal = mode === 'std' ? fmtv(a1_std * d21_std * b2_std, 3) : fmtv(serial_indirect, 4);
+  const indPrefix = mode === 'std' ? 'β' : 'b';
   let indLine1 = `${indPrefix} = ${indVal}`;
   let indLine2 = '';
   
@@ -1881,11 +1911,10 @@ function buildSerialMedSVG(d, mode, showP, W, H){
   } else {
     indLine2 = `p N/A`;
   }
-
-  // ALL PATHS use the same line style toggle (dotted or solid) - not just c'
+  
   const lineStyle = _useDottedDirect ? 'stroke-dasharray="8,4"' : '';
-
-  return `<svg viewBox="0 0 ${W} ${H+70}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">
+  
+  return `<svg viewBox="0 0 ${W} ${H + 70}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">
   ${svgDefs()}
   
   <!-- NODES -->
@@ -1894,71 +1923,77 @@ function buildSerialMedSVG(d, mode, showP, W, H){
   ${svgNode(m2B.x, m2B.y, bw, bh, m2n, '#3d5af1', '#e0f6fb')}
   ${svgNode(yB.x, yB.y, bw, bh, yn)}
   
-  <!-- a1 PATH: X → M1 (straight diagonal) -->
+  <!-- a1 PATH: X → M1 (touches left edge of M1) -->
   <line x1="${a1x1}" y1="${a1y1}" x2="${a1x2}" y2="${a1y2}" stroke="#3d5af1" stroke-width="2.2" ${lineStyle} marker-end="url(#arr)"/>
   ${svgLabelBox(a1Lx, a1Ly, a1Lines, '#3d5af1')}
   
-  <!-- d21 PATH: M1 → M2 (straight horizontal) -->
+  <!-- d21 PATH: M1 → M2 (touches left edge of M2) -->
   <line x1="${d21x1}" y1="${d21y1}" x2="${d21x2}" y2="${d21y2}" stroke="#3d5af1" stroke-width="2.2" ${lineStyle} marker-end="url(#arr)"/>
   ${svgLabelBox(d21Lx, d21Ly, d21Lines, '#3d5af1')}
   
-  <!-- b2 PATH: M2 → Y (straight diagonal) -->
+  <!-- b2 PATH: M2 → Y (touches left edge of Y) -->
   <line x1="${b2x1}" y1="${b2y1}" x2="${b2x2}" y2="${b2y2}" stroke="#3d5af1" stroke-width="2.2" ${lineStyle} marker-end="url(#arr)"/>
   ${svgLabelBox(b2Lx, b2Ly, b2Lines, '#3d5af1')}
   
-  <!-- c' DIRECT PATH: X → Y (straight horizontal, toggles with all others) -->
+  <!-- c' DIRECT PATH: X → Y (touches left edge of Y) -->
   <line x1="${cpx1}" y1="${cpy1}" x2="${cpx2}" y2="${cpy2}" stroke="#3d5af1" stroke-width="1.8" ${lineStyle} marker-end="url(#arr)"/>
   ${svgLabelBox(cpLx, cpLy, cpLines, '#3d5af1')}
   
-  <!-- a2 PATH: X → M2 (straight diagonal) -->
+  <!-- a2 PATH: X → M2 (starts at RIGHT edge of X, ends at LEFT edge of M2) -->
   <line x1="${a2x1}" y1="${a2y1}" x2="${a2x2}" y2="${a2y2}" stroke="#3d5af1" stroke-width="1.8" ${lineStyle} marker-end="url(#arr)"/>
   ${svgLabelBox(a2Lx, a2Ly, a2Lines, '#3d5af1')}
   
-  <!-- b1 PATH: M1 → Y (straight diagonal) -->
+  <!-- b1 PATH: M1 → Y (starts at RIGHT edge of M1, ends at LEFT edge of Y) -->
   <line x1="${b1x1}" y1="${b1y1}" x2="${b1x2}" y2="${b1y2}" stroke="#3d5af1" stroke-width="1.8" ${lineStyle} marker-end="url(#arr)"/>
   ${svgLabelBox(b1Lx, b1Ly, b1Lines, '#3d5af1')}
   
-  <!-- SERIAL INDIRECT EFFECT BOX - ENLARGED TO CONTAIN CONTENT -->
-  <rect x="${W/2-190}" y="${H-62}" width="380" height="54" rx="6" fill="#e7faf0" fill-opacity=".97" stroke="#3d5af1" stroke-width="1.5"/>
-  <text x="${W/2}" y="${H-62+14}" text-anchor="middle" font-size="10.5" fill="#3d5af1" font-weight="700" font-family="Sora,sans-serif">Serial indirect effect (a₁·d₂₁·b₂):</text>
-  <text x="${W/2}" y="${H-62+28}" text-anchor="middle" font-size="10.5" fill="#3d5af1" font-weight="500" font-family="Sora,sans-serif">${indLine1}</text>
-  <text x="${W/2}" y="${H-62+42}" text-anchor="middle" font-size="10" fill="#3d5af1" font-weight="400" font-family="Sora,sans-serif">${indLine2}</text>
+  <!-- SERIAL INDIRECT EFFECT BOX -->
+  <rect x="${W/2 - 190}" y="${H - 62}" width="380" height="54" rx="6" fill="#e7faf0" fill-opacity=".97" stroke="#3d5af1" stroke-width="1.5"/>
+  <text x="${W/2}" y="${H - 62 + 14}" text-anchor="middle" font-size="10.5" fill="#3d5af1" font-weight="700" font-family="Sora,sans-serif">Serial indirect effect (a₁·d₂₁·b₂):</text>
+  <text x="${W/2}" y="${H - 62 + 28}" text-anchor="middle" font-size="10.5" fill="#3d5af1" font-weight="500" font-family="Sora,sans-serif">${indLine1}</text>
+  <text x="${W/2}" y="${H - 62 + 42}" text-anchor="middle" font-size="10" fill="#3d5af1" font-weight="400" font-family="Sora,sans-serif">${indLine2}</text>
   </svg>`;
 }
 
-// ── MODERATION DIAGRAM ── (Direct effect label centered under the X→Y path line, CI toggle only)
+// ── MODERATION DIAGRAM ── (Moderator arrow points directly to X→Y line, no circle)
 function buildModerationSVG(d, mode, showP, W, H){
   const {xn,wn,yn,b_x,b_x_std,pb_x,b_xw,b_xw_std,pb_xw} = d;
-  const bw=120, bh=50;
-  const xB={x:28, y:H/2-bh/2};
-  const wB={x:W/2-bw/2, y:20};
-  const yB={x:W-bw-28, y:H/2-bh/2};
-
-  // Calculate the midpoint of the X→Y path line
-  const pathStartX = xB.x + bw;
-  const pathStartY = xB.y + bh/2;
-  const pathEndX = yB.x;
-  const pathEndY = yB.y + bh/2;
+  const bw = 120, bh = 50;
   
-  // Direct effect label - centered under the X→Y path line
-  const directLabelX = (pathStartX + pathEndX) / 2;
+  // Position boxes
+  const xB = {x: 28, y: H/2 - bh/2};              // X box (left)
+  const wB = {x: W/2 - bw/2, y: 20};              // W box (top center)
+  const yB = {x: W - bw - 28, y: H/2 - bh/2};     // Y box (right)
+  
+  // X → Y path line coordinates
+  const pathStartX = xB.x + bw;                    // right edge of X
+  const pathStartY = xB.y + bh/2;                  // middle of X vertically
+  const pathEndX = yB.x;                           // left edge of Y
+  const pathEndY = yB.y + bh/2;                    // middle of Y vertically
+  
+  // Find the point where the moderator arrow should hit the X→Y line
+  // This is the midpoint of the X→Y line
+  const hitPointX = (pathStartX + pathEndX) / 2;
+  const hitPointY = (pathStartY + pathEndY) / 2;
+  
+  // Moderator arrow: starts from bottom center of W box, goes to hit point on X→Y line
+  const wArrowStartX = wB.x + bw/2;                // bottom center of W box
+  const wArrowStartY = wB.y + bh;                  // bottom edge of W box
+  const wArrowEndX = hitPointX;                    // hit point on X→Y line
+  const wArrowEndY = hitPointY;                    // hit point on X→Y line
+  
+  // Direct effect label position (centered under the X→Y line)
+  const directLabelX = hitPointX;
   const directLabelY = pathStartY + 28;
   
-  // Interaction label position
-  const iX = W/2;
-  const iY = H/2;
-
   const xLines = coefLines(b_x, b_x_std, pb_x, mode, showP);
-  
-  // Count how many lines we need to display (coefficient line + possibly p-value line)
   const hasPValue = showP && xLines[1];
   const boxHeight = hasPValue ? 54 : 36;
   const boxWidth = 140;
   
-  // ALL PATHS use the same line style toggle (dotted or solid)
   const lineStyle = _useDottedDirect ? 'stroke-dasharray="8,4"' : '';
-
-   // Get moderation effect - coefficient always shown, CI toggled via _indirectDisplayMode
+  
+  // Moderation effect display
   const modVal = mode === 'std' ? fmtv(b_xw_std, 3) : fmtv(b_xw, 3);
   const modPrefix = mode === 'std' ? 'β' : 'b';
   const modStar = pStar(pb_xw);
@@ -1966,21 +2001,18 @@ function buildModerationSVG(d, mode, showP, W, H){
   let modLine1 = `${modPrefix} = ${modVal}${modStar ? ' ' + modStar : ''}`;
   let modLine2 = '';
   
-  // Show 95% CI based on toggle - using correct moderation property names
   if (_indirectDisplayMode === 'ci') {
-    // Use ci_lo_xw and ci_hi_xw from moderation diagData
     if (d.ci_lo_xw !== undefined && d.ci_hi_xw !== undefined && !isNaN(d.ci_lo_xw) && !isNaN(d.ci_hi_xw)) {
       modLine2 = `95% CI [${fmtv(d.ci_lo_xw, 3)}, ${fmtv(d.ci_hi_xw, 3)}]`;
     } else {
       modLine2 = `95% CI [N/A, N/A]`;
     }
   }
-
-  // Adjust box height based on whether CI is shown
+  
   const modBoxHeight = modLine2 ? 52 : 36;
   const modBoxY = H - (modBoxHeight + 8);
-
-  return `<svg viewBox="0 0 ${W} ${H+50}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">
+  
+  return `<svg viewBox="0 0 ${W} ${H + 50}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">
   ${svgDefs()}
   
   <!-- NODES -->
@@ -1991,8 +2023,8 @@ function buildModerationSVG(d, mode, showP, W, H){
   <!-- Main effect X → Y path -->
   <line x1="${pathStartX}" y1="${pathStartY}" x2="${pathEndX}" y2="${pathEndY}" stroke="#3d5af1" stroke-width="2.2" ${lineStyle} marker-end="url(#arr)"/>
   
-  <!-- Moderator W → interaction node path -->
-  <line x1="${wB.x+bw/2}" y1="${wB.y+bh}" x2="${iX}" y2="${iY-14}" stroke="#3d5af1" stroke-width="2" ${lineStyle} marker-end="url(#arr)"/>
+  <!-- Moderator W → arrow points DIRECTLY to the X→Y line (no circle) -->
+  <line x1="${wArrowStartX}" y1="${wArrowStartY}" x2="${wArrowEndX}" y2="${wArrowEndY}" stroke="#3d5af1" stroke-width="2" ${lineStyle} marker-end="url(#arr)"/>
   
   <!-- DIRECT EFFECT LABEL - centered under the X→Y path line -->
   <rect x="${directLabelX - boxWidth/2}" y="${directLabelY - 8}" width="${boxWidth}" height="${boxHeight}" rx="5" fill="white" fill-opacity=".92" stroke="#3d5af1" stroke-width="1" stroke-opacity=".35"/>
@@ -2000,12 +2032,8 @@ function buildModerationSVG(d, mode, showP, W, H){
   <text x="${directLabelX}" y="${directLabelY + 18}" text-anchor="middle" font-size="10" font-weight="500" fill="#3d5af1" font-family="Sora,sans-serif">${xLines[0]}</text>
   ${hasPValue ? `<text x="${directLabelX}" y="${directLabelY + 32}" text-anchor="middle" font-size="9" font-weight="400" fill="#3d5af1" font-family="Sora,sans-serif">${xLines[1]}</text>` : ''}
   
-  <!-- Interaction circle -->
-  <circle cx="${iX}" cy="${iY}" r="13" fill="white" stroke="#3d5af1" stroke-width="2"/>
-  <text x="${iX}" y="${iY+5}" text-anchor="middle" font-size="15" fill="#3d5af1" font-weight="800" font-family="Sora,sans-serif">×</text>
-  
-  <!-- MODERATION EFFECT BOX - shows CI only when toggled, never p-value -->
-  <rect x="${W/2-160}" y="${modBoxY}" width="320" height="${modBoxHeight}" rx="6" fill="#e7faf0" fill-opacity=".97" stroke="#3d5af1" stroke-width="1.5"/>
+  <!-- MODERATION EFFECT BOX -->
+  <rect x="${W/2 - 160}" y="${modBoxY}" width="320" height="${modBoxHeight}" rx="6" fill="#e7faf0" fill-opacity=".97" stroke="#3d5af1" stroke-width="1.5"/>
   <text x="${W/2}" y="${modBoxY + 16}" text-anchor="middle" font-size="11" fill="#3d5af1" font-weight="700" font-family="Sora,sans-serif">Moderation effect:</text>
   <text x="${W/2}" y="${modBoxY + 32}" text-anchor="middle" font-size="11" fill="#3d5af1" font-weight="600" font-family="Sora,sans-serif">${modLine1}</text>
   ${modLine2 ? `<text x="${W/2}" y="${modBoxY + 46}" text-anchor="middle" font-size="10" fill="#3d5af1" font-weight="500" font-family="Sora,sans-serif">${modLine2}</text>` : ''}
@@ -2217,9 +2245,15 @@ function runSimpleMed(vars,covArrays,covNames,cl,nBoot){
     }
   }
 
-  const pMedSobel=p_sob<.05;
-  const sobelApa=`<strong>Sobel/Analytic APA-Style Summary:</strong><br>
-  The indirect effect of <strong>${xn}</strong> on <strong>${yn}</strong> through <strong>${mn}</strong> was b = ${fmtv(ind)} (SE = ${fmtv(se_sob)}, z = ${fmtv(z_sob,3)}, p ${fmtp(p_sob)}, 95% CI [${fmtv(sobelCI_lo)}, ${fmtv(sobelCI_hi)}]).${pMedSobel?' The indirect effect was statistically significant, supporting mediation.':' The indirect effect was not statistically significant.'}`;
+const pMedSobel=p_sob<.05;
+const totalEffectSig = rTot.p[1] < .05;
+const directEffectSig = rY.p[1] < .05;
+const mediationType = (pMedSobel && totalEffectSig && !directEffectSig) ? 'full mediation' : (pMedSobel && totalEffectSig && directEffectSig) ? 'partial mediation' : 'no mediation';
+const sobelApa=`<strong>APA-Style Summary — Direct and Indirect Effects:</strong><br>
+<strong>Total effect (c):</strong> b = ${fmtv(ctot)}, SE = ${fmtv(rTot.se[1])}, t = ${fmtv(rTot.t[1])}, p ${fmtp(rTot.p[1])}, 95% CI [${fmtv(rTot.cilo[1])}, ${fmtv(rTot.cihi[1])}].<br>
+<strong>Direct effect (c'):</strong> b = ${fmtv(cp)}, SE = ${fmtv(rY.se[1])}, t = ${fmtv(rY.t[1])}, p ${fmtp(rY.p[1])}, 95% CI [${fmtv(rY.cilo[1])}, ${fmtv(rY.cihi[1])}].<br>
+<strong>Indirect effect (a×b):</strong> b = ${fmtv(ind)} (SE = ${fmtv(se_sob)}, z = ${fmtv(z_sob,3)}, p ${fmtp(p_sob)}, 95% CI [${fmtv(sobelCI_lo)}, ${fmtv(sobelCI_hi)}]).<br>
+<strong>Mediation determination:</strong> This is <strong>${mediationType.toUpperCase()}</strong> because the indirect effect is ${pMedSobel ? 'significant' : 'not significant'}, the total effect is ${totalEffectSig ? 'significant' : 'not significant'}, and the direct effect is ${directEffectSig ? 'significant' : 'not significant'}.`;
 
   const diagData={
     type:'simple',xn,mn,yn,
@@ -2318,8 +2352,18 @@ function runSerialMed(vars,covArrays,covNames,cl,nBoot){
     {label:'Total c',b:rTot.coef[1],b_std:tTots,se:totalSE,t:totalT,p:totalP,cilo:totalLo,cihi:totalHi},
   ];
 
-  const serialApa=`<strong>Analytic APA-Style Summary — Serial Indirect Path ${xn}→${m1n}→${m2n}→${yn}:</strong><br>
-  The serial indirect effect of <strong>${xn}</strong> on <strong>${yn}</strong> through <strong>${m1n}</strong> and then <strong>${m2n}</strong> (a1×d21×b2) was b = ${fmtv(i12)}. The total indirect effect was b = ${fmtv(iTotal)}, and the direct effect was b = ${fmtv(direct)} (SE = ${fmtv(directSE)}, t = ${fmtv(directT)}, p ${fmtp(directP)}).${bootRes?'':' Bootstrap confidence intervals are recommended for inferential conclusions about indirect effects.'}`;
+const totalEffectSig = rTot.p[1] < .05;
+const directEffectSig = rY.p[1] < .05;
+const serialIndirectSig = (bootRes && bootRes.xm1m2y && (bootRes.xm1m2y.lo > 0 || bootRes.xm1m2y.hi < 0)) || (!bootRes && i12 !== 0);
+const serialMediationType = (serialIndirectSig && totalEffectSig && !directEffectSig) ? 'full serial mediation' : (serialIndirectSig && totalEffectSig && directEffectSig) ? 'partial serial mediation' : 'no serial mediation';
+const serialApa=`<strong>APA-Style Summary — Direct, Indirect, and Serial Effects:</strong><br>
+<strong>Total effect (c):</strong> b = ${fmtv(rTot.coef[1])}, SE = ${fmtv(totalSE)}, t = ${fmtv(totalT)}, p ${fmtp(totalP)}, 95% CI [${fmtv(totalLo)}, ${fmtv(totalHi)}].<br>
+<strong>Direct effect (c'):</strong> b = ${fmtv(direct)}, SE = ${fmtv(directSE)}, t = ${fmtv(directT)}, p ${fmtp(directP)}, 95% CI [${fmtv(directLo)}, ${fmtv(directHi)}].<br>
+<strong>Serial indirect effect (${xn}→${m1n}→${m2n}→${yn}):</strong> b = ${fmtv(i12)}.<br>
+<strong>Specific indirect (${xn}→${m1n}→${yn}):</strong> b = ${fmtv(i1)}.<br>
+<strong>Specific indirect (${xn}→${m2n}→${yn}):</strong> b = ${fmtv(i2)}.<br>
+<strong>Total indirect effect (sum of all paths):</strong> b = ${fmtv(iTotal)}.<br>
+<strong>Mediation determination:</strong> This is <strong>${serialMediationType.toUpperCase()}</strong> because the serial indirect effect is ${serialIndirectSig ? 'significant' : 'not significant'}, the total effect is ${totalEffectSig ? 'significant' : 'not significant'}, and the direct effect is ${directEffectSig ? 'significant' : 'not significant'}.${bootRes?'':' Bootstrap confidence intervals are recommended for inferential conclusions about indirect effects.'}`;
 
   const diagData={
     type:'serial',xn,m1n,m2n,yn,

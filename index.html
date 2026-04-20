@@ -868,21 +868,20 @@ body{font-family:var(--font);font-size:1rem;background:var(--bg);color:var(--tex
         </div>
       </div>
 
-      <!-- 6. Moderated Mediation Formulas -->
-      <div class="panel">
-        <div class="panel-header"><div class="panel-title"><i class="fas fa-project-diagram"></i> 6. Moderated Mediation (Conditional Process Analysis)</div></div>
-        <div class="panel-body">
-          <p class="doc-prose"><strong>Stage 1 (Moderated a-path):</strong> M = i₁ + a₁·X + a₂·W + a₃·(X×W) + e₁</div>
-          <div class="formula-box"><strong>Stage 2 (b-path):</strong> Y = i₂ + c'·X + b·M + e₂</div>
-          <p class="doc-prose"><strong>Conditional Indirect Effect at level w of W:</strong></p>
-          <div class="formula-box">IE(w) = (a₁ + a₃·w) × b</div>
-          <p class="doc-prose"><strong>Index of Moderated Mediation (IMM):</strong></p>
-          <div class="formula-box">IMM = a₃ × b</div>
-          <div class="formula-box"><strong>Bootstrap CI for IMM:</strong> Percentile method on a₃ᵦ × bᵦ across B bootstrap samples</div>
-          <p class="doc-prose"><strong>Conditional Indirect Effects at ±1 SD and Mean:</strong></p>
-          <div class="formula-box">IE(Mean) = a₁ × b &nbsp;|&nbsp; IE(Low) = (a₁ - a₃·SD_w) × b &nbsp;|&nbsp; IE(High) = (a₁ + a₃·SD_w) × b</div>
-        </div>
-      </div>
+     <!-- 6. Moderated Mediation Formulas -->
+<div class="panel">
+  <div class="panel-header"><div class="panel-title"><i class="fas fa-project-diagram"></i> 6. Moderated Mediation (Conditional Process Analysis)</div></div>
+  <div class="panel-body">
+    <p class="doc-prose"><strong>Stage 1 (Moderated a-path):</strong> M = i₁ + a₁·X + a₂·W + a₃·(X×W) + e₁</p>
+    <div class="formula-box"><strong>Stage 2 (b-path):</strong> Y = i₂ + c'·X + b·M + e₂</div>
+    <div class="formula-box"><strong>Conditional Indirect Effect at level w of W:</strong> IE(w) = (a₁ + a₃·w) × b</div>
+    <div class="formula-box"><strong>Index of Moderated Mediation (IMM):</strong> IMM = a₃ × b</div>
+    <div class="formula-box"><strong>Bootstrap CI for IMM:</strong> Percentile method on a₃ᵦ × bᵦ across B bootstrap samples</div>
+    <div class="formula-box"><strong>Conditional Indirect Effects at ±1 SD and Mean:</strong><br>
+      IE(Mean) = a₁ × b &nbsp;|&nbsp; IE(Low) = (a₁ - a₃·SD_w) × b &nbsp;|&nbsp; IE(High) = (a₁ + a₃·SD_w) × b
+    </div>
+  </div>
+</div>
 
       <!-- 7. Bootstrap Implementation -->
       <div class="panel">

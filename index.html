@@ -1240,8 +1240,8 @@ function ols(y,Xmat,names,cl=.95){
 }
 
 // ── FORMATTING ──
-function fmtp(p){return p<.001?'<.001':p.toFixed(4)}
-function fmtv(v,d=4){if(v===undefined||v===null||isNaN(v))return 'N/A';return Number(v.toFixed(d))}
+function fmtp(p){if(p<0.001)return '<.001';return p.toFixed(3)}
+function fmtv(v,d=3){if(v===undefined||v===null||isNaN(v))return 'N/A';return v.toFixed(d)}
 function pStar(p){return p<.001?'***':p<.01?'**':p<.05?'*':''}
 function parseNums(raw){
   if(!raw||!raw.trim())return null;
@@ -1911,29 +1911,30 @@ function escapeXml(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// Helper: Format coefficient lines
+// Helper: Format coefficient lines - FIXED: dp=3 for ALL values
 function formatCoefLines(b, b_std, p, mode, showP){
     const val = mode === 'std' ? fmtv(b_std, 3) : fmtv(b, 3);
     const prefix = mode === 'std' ? 'β' : 'b';
-    
-    // Asterisk ALWAYS shows based on p-value significance, regardless of showP
     const star = pStar(p);
-    
-    // First line: coefficient with asterisk (asterisk always shown if significant)
     const line1 = `${prefix} = ${val}${star ? ' ' + star : ''}`;
-    
-    // Second line: p-value only if showP is true
     if (showP && p !== undefined && p !== null && !isNaN(p)) {
-        return [line1, `p ${fmtp(p)}`];
+        let pFormatted;
+        if (p < 0.001) {
+            pFormatted = '<.001';
+        } else {
+            pFormatted = p.toFixed(3);
+        }
+        return [line1, `p = ${pFormatted}`];
     }
     return [line1];
 }
-// Helper: Get indirect effect lines
+
+// Helper: Get indirect effect lines - FIXED: dp=3 for ALL values including CI
 function getIndirectLines(d, mode, showP) {
-    const indVal = mode === 'std' ? fmtv(d.a_std * d.b_std, 3) : fmtv(d.indirect, 4);
+    const indVal = mode === 'std' ? fmtv(d.a_std * d.b_std, 3) : fmtv(d.indirect, 3);
     const prefix = mode === 'std' ? 'β' : 'b';
-    const star = showP && d.indirect_p !== undefined ? pStar(d.indirect_p) : '';
-const line1 = `${prefix} = ${indVal}${star ? ' ' + star : ''}`; 
+    const star = (showP && d.indirect_p !== undefined && d.indirect_p < 0.05) ? pStar(d.indirect_p) : '';
+    const line1 = `${prefix} = ${indVal}${star ? ' ' + star : ''}`; 
     
     let line2 = '';
     if (_indirectDisplayMode === 'ci') {
@@ -1947,13 +1948,22 @@ const line1 = `${prefix} = ${indVal}${star ? ' ' + star : ''}`;
             line2 = `95% CI [N/A, N/A]`;
         }
     } else {
-        line2 = showP && d.indirect_p !== undefined ? `p ${fmtp(d.indirect_p)}` : `p N/A`;
+        if (showP && d.indirect_p !== undefined) {
+            let pFormatted;
+            if (d.indirect_p < 0.001) {
+                pFormatted = '<.001';
+            } else {
+                pFormatted = d.indirect_p.toFixed(3);
+            }
+            line2 = `p = ${pFormatted}`;
+        } else {
+            line2 = `p N/A`;
+        }
     }
     return [line1, line2];
 }
 
 // MAIN SIMPLE MEDIATION DIAGRAM FUNCTION - FIXED (removed diagramSettings reference)
-// REPLACE with this NEW function:
 function buildSimpleMedSVG(d, mode, showP, W, H) {
     const { xn, mn, yn, a, a_std, pa, b, b_std, pb, cp, cp_std, pcp } = d;
     const colors = getDiagramColors();
@@ -1982,17 +1992,15 @@ function buildSimpleMedSVG(d, mode, showP, W, H) {
     const bMid = { x: (bStart.x + bEnd.x) / 2 + (35 * scale), y: (bStart.y + bEnd.y) / 2 - 22 };
     const cpMid = { x: W / 2, y: cpStart.y + 30 };
     
-     // Format lines - if coefficients are hidden, show empty or minimal
+// Format lines - if coefficients are hidden, show empty or minimal
     let aLines, bLines, cpLines, indLines;
     
     if (!_diagShowCoefs) {
-        // Plain mode - no coefficients or p-values
         aLines = [];
         bLines = [];
         cpLines = [];
         indLines = ["Indirect effect"];
     } else {
-        // Normal mode with coefficients
         aLines = formatCoefLines(a, a_std, pa, mode, showP);
         bLines = formatCoefLines(b, b_std, pb, mode, showP);
         cpLines = formatCoefLines(cp, cp_std, pcp, mode, showP);  
@@ -2033,7 +2041,7 @@ function buildSimpleMedSVG(d, mode, showP, W, H) {
     </svg>`;
 }
 
-// ── SERIAL MEDIATION DIAGRAM  ──
+// ── SERIAL MEDIATION DIAGRAM ──
 function buildSerialMedSVG(d, mode, showP, W, H){
   const {xn,m1n,m2n,yn,
     a1,a1_std,pa1,
@@ -2047,52 +2055,43 @@ function buildSerialMedSVG(d, mode, showP, W, H){
   const colors = getDiagramColors();
   const bw = 120, bh = 50;
   
-  // Apply line length scaling factor
   const scale = _diagLineLength;
   
-  // Position nodes with scaling
   const xB   = {x: 20 * scale,                y: H/2 - bh/2};
   const m1B  = {x: W/3 - bw/2,                y: 28};
   const m2B  = {x: 2*W/3 - bw/2,              y: 28};
   const yB   = {x: W - bw - 20 * scale,        y: H/2 - bh/2};
   
-  // a1 PATH: X → M1
   const a1x1 = xB.x + bw;
   const a1y1 = xB.y + bh/2;
   const a1x2 = m1B.x;
   const a1y2 = m1B.y + bh/2;
   
-  // d21 PATH: M1 → M2
   const d21x1 = m1B.x + bw;
   const d21y1 = m1B.y + bh/2;
   const d21x2 = m2B.x;
   const d21y2 = m2B.y + bh/2;
   
-  // b2 PATH: M2 → Y
   const b2x1 = m2B.x + bw;
   const b2y1 = m2B.y + bh/2;
   const b2x2 = yB.x;
   const b2y2 = yB.y + bh/2;
   
-  // c' DIRECT PATH: X → Y
   const cpx1 = xB.x + bw;
   const cpy1 = xB.y + bh/2 + 18;
   const cpx2 = yB.x;
   const cpy2 = yB.y + bh/2 + 18;
   
-  // a2 PATH: X → M2
   const a2x1 = xB.x + bw;
   const a2y1 = xB.y + bh - 8;
   const a2x2 = m2B.x;
   const a2y2 = m2B.y + bh - 8;
   
-  // b1 PATH: M1 → Y
   const b1x1 = m1B.x + bw;
   const b1y1 = m1B.y + bh - 8;
   const b1x2 = yB.x;
   const b1y2 = yB.y + bh/2 - 15;
   
-  // Label positions for CARD ON mode (floating boxes)
   const a1Lx  = (a1x1 + a1x2) / 2 - 40;
   const a1Ly  = (a1y1 + a1y2) / 2 - 22;
   const d21Lx = (d21x1 + d21x2) / 2;
@@ -2106,7 +2105,6 @@ function buildSerialMedSVG(d, mode, showP, W, H){
   const b1Lx  = (b1x1 + b1x2) / 2 + 25;
   const b1Ly  = (b1y1 + b1y2) / 2 + 10;
   
-  // Calculate line midpoints for CARD OFF mode (labels between lines)
   const a1Mid = { x: (a1x1 + a1x2) / 2, y: (a1y1 + a1y2) / 2 };
   const d21Mid = { x: (d21x1 + d21x2) / 2, y: (d21y1 + d21y2) / 2 };
   const b2Mid = { x: (b2x1 + b2x2) / 2, y: (b2y1 + b2y2) / 2 };
@@ -2114,7 +2112,6 @@ function buildSerialMedSVG(d, mode, showP, W, H){
   const a2Mid = { x: (a2x1 + a2x2) / 2, y: (a2y1 + a2y2) / 2 };
   const b1Mid = { x: (b1x1 + b1x2) / 2, y: (b1y1 + b1y2) / 2 };
   
-  // Format lines with auto-wrap (respects _diagShowCoefs)
   let a1Lines, d21Lines, b2Lines, cpLines, a2Lines, b1Lines;
   
   if (!_diagShowCoefs) {
@@ -2123,12 +2120,11 @@ function buildSerialMedSVG(d, mode, showP, W, H){
     a1Lines  = formatCoefLines(a1, a1_std, pa1, mode, showP);
     d21Lines = formatCoefLines(d21, d21_std, pd21, mode, showP);
     b2Lines  = formatCoefLines(b2, b2_std, pb2, mode, showP);
-cpLines  = formatCoefLines(cp, cp_std, pcp, mode, showP);
+    cpLines  = formatCoefLines(cp, cp_std, pcp, mode, showP);
     a2Lines  = formatCoefLines(a2, a2_std, pa2, mode, showP);
     b1Lines  = formatCoefLines(b1, b1_std, pb1, mode, showP);
   }
   
-  // Indirect effect lines
   const indVal = mode === 'std' ? fmtv(a1_std * d21_std * b2_std, 3) : fmtv(serial_indirect, 4);
   const indPrefix = mode === 'std' ? 'β' : 'b';
   let indLine1 = `${indPrefix} = ${indVal}`;
@@ -2151,7 +2147,6 @@ cpLines  = formatCoefLines(cp, cp_std, pcp, mode, showP);
     '<marker id="arr_bw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#000000"/></marker>' :
     '<marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3d5af1"/></marker>';
   
-  // Function to render label for CARD OFF mode (no box, just text between lines)
   function renderInlineLabel(midX, midY, lines) {
     if (!lines || lines.length === 0) return '';
     
@@ -2162,12 +2157,11 @@ cpLines  = formatCoefLines(cp, cp_std, pcp, mode, showP);
     
     let textElements = '';
     lines.forEach((line, i) => {
-      textElements += `<text x="${midX}" y="${startY + i * lineHeight}" text-anchor="middle" font-size="${fs}" font-weight="${i === 0 ? '700' : '500'}" fill="${_useBlackAndWhite ? '#000000' : colors.labelText}" font-family="Sora,sans-serif" paint-order="stroke" stroke="#ffffff" stroke-width="2.5" stroke-opacity="0.9">${escapeXml(line)}</text>`;
+      textElements += `<text x="${midX}" y="${startY + i * lineHeight}" text-anchor="middle" font-size="${fs}" font-weight="${i === 0 ? '700' : '500'}" fill="${_useBlackAndWhite ? '#000000' : colors.labelText}" font-family="Sora,sans-serif" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-opacity="0.95">${escapeXml(line)}</text>`;
     });
     
-    // Small semi-transparent background for readability (no card box)
     const maxWidth = Math.max(...lines.map(l => l.length)) * 6.5;
-    return `<rect x="${midX - maxWidth/2 - 4}" y="${midY - totalHeight/2 - 2}" width="${maxWidth + 8}" height="${totalHeight + 4}" rx="4" fill="#ffffff" fill-opacity="0.85" stroke="none"/>${textElements}`;
+    return `<rect x="${midX - maxWidth/2 - 6}" y="${midY - totalHeight/2 - 3}" width="${maxWidth + 12}" height="${totalHeight + 6}" rx="6" fill="#ffffff" fill-opacity="0.95" stroke="none"/>${textElements}`;
   }
   
   return `<svg viewBox="0 0 ${W} ${H + 80}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;font-family:Sora,sans-serif">
@@ -2178,31 +2172,24 @@ cpLines  = formatCoefLines(cp, cp_std, pcp, mode, showP);
     ${drawNode(m2B.x, m2B.y, bw, bh, m2n, true)}
     ${drawNode(yB.x, yB.y, bw, bh, yn, false)}
     
-    <!-- a1 PATH: X → M1 -->
     <line x1="${a1x1}" y1="${a1y1}" x2="${a1x2}" y2="${a1y2}" stroke="${colors.lineStroke}" stroke-width="2.2" ${lineStyle} marker-end="${markerUrl}"/>
     ${_diagShowCardBox ? (a1Lines.length > 0 ? drawLabelBox(a1Lx, a1Ly, a1Lines, 120) : '') : (a1Lines.length > 0 ? renderInlineLabel(a1Mid.x, a1Mid.y, a1Lines) : '')}
     
-    <!-- d21 PATH: M1 → M2 -->
     <line x1="${d21x1}" y1="${d21y1}" x2="${d21x2}" y2="${d21y2}" stroke="${colors.lineStroke}" stroke-width="2.2" ${lineStyle} marker-end="${markerUrl}"/>
     ${_diagShowCardBox ? (d21Lines.length > 0 ? drawLabelBox(d21Lx, d21Ly, d21Lines, 120) : '') : (d21Lines.length > 0 ? renderInlineLabel(d21Mid.x, d21Mid.y, d21Lines) : '')}
     
-    <!-- b2 PATH: M2 → Y -->
     <line x1="${b2x1}" y1="${b2y1}" x2="${b2x2}" y2="${b2y2}" stroke="${colors.lineStroke}" stroke-width="2.2" ${lineStyle} marker-end="${markerUrl}"/>
     ${_diagShowCardBox ? (b2Lines.length > 0 ? drawLabelBox(b2Lx, b2Ly, b2Lines, 120) : '') : (b2Lines.length > 0 ? renderInlineLabel(b2Mid.x, b2Mid.y, b2Lines) : '')}
     
-    <!-- c' DIRECT PATH: X → Y -->
     <line x1="${cpx1}" y1="${cpy1}" x2="${cpx2}" y2="${cpy2}" stroke="${colors.lineStroke}" stroke-width="1.8" ${lineStyle} marker-end="${markerUrl}"/>
     ${_diagShowCardBox ? (cpLines.length > 0 ? drawLabelBox(cpLx, cpLy, cpLines, 140) : '') : (cpLines.length > 0 ? renderInlineLabel(cpMid.x, cpMid.y, cpLines) : '')}
     
-    <!-- a2 PATH: X → M2 -->
     <line x1="${a2x1}" y1="${a2y1}" x2="${a2x2}" y2="${a2y2}" stroke="${colors.lineStroke}" stroke-width="1.8" ${lineStyle} marker-end="${markerUrl}"/>
     ${_diagShowCardBox ? (a2Lines.length > 0 ? drawLabelBox(a2Lx, a2Ly, a2Lines, 120) : '') : (a2Lines.length > 0 ? renderInlineLabel(a2Mid.x, a2Mid.y, a2Lines) : '')}
     
-    <!-- b1 PATH: M1 → Y -->
     <line x1="${b1x1}" y1="${b1y1}" x2="${b1x2}" y2="${b1y2}" stroke="${colors.lineStroke}" stroke-width="1.8" ${lineStyle} marker-end="${markerUrl}"/>
     ${_diagShowCardBox ? (b1Lines.length > 0 ? drawLabelBox(b1Lx, b1Ly, b1Lines, 120) : '') : (b1Lines.length > 0 ? renderInlineLabel(b1Mid.x, b1Mid.y, b1Lines) : '')}
     
-    <!-- SERIAL INDIRECT EFFECT BOX (only shown when Card Box is ON) -->
     ${_diagShowCardBox ? `
     <rect x="${W/2 - 190}" y="${H - 68}" width="380" height="60" rx="6" fill="${colors.boxFill}" fill-opacity=".97" stroke="${colors.boxStroke}" stroke-width="1.5"/>
     <text x="${W/2}" y="${H - 68 + 14}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${colors.boxText}" font-family="Sora,sans-serif">Serial indirect effect:</text>

@@ -80,7 +80,7 @@ All data input fields require one numeric value per line. **Do not include heade
 
 ### Example for Simple Mediation
 
-| Variable | Input Format |
+| Variable Name | Input Format |
 | :--- | :--- |
 | **X (Stress)** | `2.3`<br>`4.1`<br>`3.8`<br>`5.0`<br>`...` |
 | **M (Coping)** | `3.1`<br>`2.5`<br>`4.2`<br>`3.9`<br>`...` |
